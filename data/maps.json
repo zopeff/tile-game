@@ -1,0 +1,26 @@
+[ 
+    {
+        "name":"overworld",
+        "mapPath":"./maps/test1.json",
+        "tilesPath":"./maps/overworld.json",
+        "imgPath":"./img/Overworld.png",
+        "origin":[0,0],
+        "spawn":[12,7]
+    },
+    {
+        "name":"house",
+        "mapPath":"./maps/house1.json",
+        "tilesPath":"./maps/interrior.json",
+        "imgPath":"./img/Inner.png",
+        "origin":[0,0],
+        "spawn":[4,8]
+    },
+    {
+        "name":"cave",
+        "mapPath":"./maps/cave1.json",
+        "tilesPath":"./maps/cave.json",
+        "imgPath":"./img/cave.png",
+        "origin":[0,0],
+        "spawn":[3,1]
+    }
+]
