@@ -1,4 +1,3 @@
-
 export class Thing{
     name = "";
     speed = 5;
@@ -21,15 +20,20 @@ export class Thing{
             );
     }
 
-    move(ctx, x, y){
-        this.x += Math.sign(x);
-        this.y += Math.sign(y);
+    move(ctx, world, x, y){
+        let dx = this.x + Math.sign(x);
+        let dy = this.y + Math.sign(y);
 
-        //clamp(this.x + Math.sign(x), 0, 10) //map max
-        //clamp(this.y + Math.sign(y), 0, 10) //map max
+        if(world.canMove(dx,dy, this instanceof NPC)){
+            this.x = dx;
+            this.y = dy;
+            return true;
+        }
+
+        return false;
     }
     
-    updateAnimate(ctx,timestamp){
+    updateAnimate(ctx, world, timestamp){
 
     }
 
@@ -49,7 +53,6 @@ export class Sprite extends Thing{
 
         this.column = 0;
         this.row = 0;
-        this.frame = 0;
         this.width = 48;
         this.height = 48;
 
@@ -57,11 +60,16 @@ export class Sprite extends Thing{
         this.scale_y=3;
 
         this.speed = 8; //48 / 6(num frames)
+        this.num_frames = 6;
+
+        this.offset = [48,64]
+
         // 0 = down
         // 1 = left
         // 2 = right
         // 3 = up
         this.facing = 0;
+        this.frame = 0;
         this.animSpeed = 100;
         this.animate_start;
         this.max_frame = 0;
@@ -113,7 +121,7 @@ export class Sprite extends Thing{
         this.facing = dir
     }
 
-    move(ctx, dir){
+    move(ctx, world, dir){
         if( this.animate && !this.animate_move ){
             return; // only one at a time
         }
@@ -121,27 +129,28 @@ export class Sprite extends Thing{
         this.column = 0;
         let success = false;
 
+
         switch(dir){
             case 'up':
-                success = super.move(ctx, 0, -this.speed )
-                console.log("up")
+                success = super.move(ctx, world, 0, -1 )
+                console.log(this.name,"up")
                 this.face(ctx,dir)
                 break;
             case 'down':
-                success = super.move(ctx, 0, this.speed )
-                console.log("down")
+                success = super.move(ctx, world, 0, 1 )
+                console.log(this.name,"down")
                 this.row = 0
                 this.face(ctx,dir)
                 break;
             case 'left':
-                success = super.move(ctx, -this.speed,0 )
-                console.log("left")
+                success = super.move(ctx, world, -1,0 )
+                console.log(this.name,"left")
                 this.row = 1
                 this.face(ctx,dir)
                 break;
             case 'right':
-                success = super.move(ctx, this.speed,0 )
-                console.log("right")
+                success = super.move(ctx, world, 1,0 )
+                console.log(this.name,"right")
                 this.row = 2
                 this.face(ctx,dir)
                 break;
@@ -152,7 +161,7 @@ export class Sprite extends Thing{
         this.animate_move = true;
     }
 
-    updateAnimate(ctx,timestamp){
+    updateAnimate(ctx, world, timestamp){
         if (this.animate_start === undefined){
             this.animate_start = timestamp;
         }
@@ -173,19 +182,21 @@ export class Sprite extends Thing{
                 this.animate_start = undefined
                 this.animate_move = false;
                 this.animate_finished = null;
-            }    
+            }
+            return true;  
         }
+        return false;
     }
 
     get screenPos(){
-        return [(this.x * 48)-48,(this.y * 48)-72]
+        return [(this.x * 48)-this.offset[0],(this.y * 48)-this.offset[1]]
     }
 
     get hitBox(){
         return[
-            this.screenPos[0]+42,
-            this.screenPos[1]+32,
-            (this.width*this.scale_x)-84, 
+            this.screenPos[0]+this.offset[0],
+            this.screenPos[1]-this.offset[1],
+            (this.width*this.scale_x), 
             (this.height*this.scale_y)-68
         ]
     }
@@ -193,8 +204,8 @@ export class Sprite extends Thing{
     draw(ctx){
         let cur_frame = this.column + this.frame;
 
-        let x = ((this.x-ctx.world.map.x) * 48)-48
-        let y = ((this.y-ctx.world.map.y) * 48)-64
+        let x = ((this.x-ctx.world.map.x) * 48)-this.offset[0]
+        let y = ((this.y-ctx.world.map.y) * 48)-this.offset[1]
         ctx.drawImage(this.#sprite, 
             (cur_frame * this.width),
             (this.row * this.height),
@@ -207,5 +218,31 @@ export class Sprite extends Thing{
         // ctx.rect(...this.hitBox);
         // ctx.stroke();
 
+    }
+}
+
+export class NPC extends Sprite{
+    constructor(options){
+        super(options.name,options.spawn[0],options.spawn[1],options.tiles.img)
+        this.width = options.tiles.width;
+        this.height = options.tiles.height;
+        this.animate = true;
+        this.animate_move = true;
+        this.offset = [0,38]
+    }
+
+    updateAnimate(ctx, world, timestamp){
+        
+        if (this.animate_start === undefined){
+            this.animate_start = timestamp;
+        }
+        const elapsed = timestamp - this.animate_start;
+
+        if( elapsed > 1500){
+            const dirArr = ['up','down','left','right'];
+            this.move(ctx, world, dirArr[Math.floor(Math.random() * dirArr.length)])
+            this.animate = true;
+            this.animate_start = timestamp; 
+        }        
     }
 }

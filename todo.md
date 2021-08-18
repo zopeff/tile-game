@@ -6,16 +6,22 @@ apply default properties to all
     load map
     map events
 
-destruct animation
+[ ] animations
+    destruction
+    environmental
+    reactions
+    transitions
 
 - interact
     * chest
     * door
     * button
+    * push/pull
 
 player
     walk animation
     health/damage
+    inventory / pickups
     death
 npc
     walk
@@ -35,6 +41,7 @@ weather
     rain
 
 title
+loading screen
 health
 score
 items/inventory
@@ -44,7 +51,7 @@ game state
         hash + checksum
         send to server
     load
-multiplayer
+multiplayer?
 
 controls
     gamepad

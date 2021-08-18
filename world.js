@@ -1,10 +1,12 @@
 import {Map} from './map.js';
+import {NPC} from './thing.js';
 import {clamp,fetchRemoteResource} from './util.js';
 
 export class World{
     entities = [];
     #map;
     #mapList;
+    #npcList;
     active = null;
     loaded = false;
     savedPositions = [];
@@ -32,11 +34,16 @@ export class World{
     }
 
     async init(){
+        this.#npcList = await fetchRemoteResource("./data/npc/npc.json")
     }
 
     addPlayer(o){
-        this.entities.push(o)
+        //this.entities.push(o)
         this.active = o
+    }
+
+    addNPC(o){
+        this.entities.push( new NPC(o) )
     }
 
     savePosition(){
@@ -83,6 +90,8 @@ export class World{
         if( this.active.position[1] != this.center[1] ){
             this.map.y = clamp((this.active.position[1]-this.center[1]),0,this.#map.height-dy)
         }
+
+        this.addNPC(this.#npcList[0])
     }
 
     addObject(o){
@@ -97,14 +106,57 @@ export class World{
         })
     }
 
+    movePlayer(ctx, dir){
+        let pos = this.active.position
+//        this._world.active.face(this.ctx,dir);
+        switch(dir){
+            case 'down':
+                pos[1]++
+                break;
+            case 'up':
+                pos[1]--;
+                break;
+            case 'left':
+                pos[0]--;
+                break;
+            case 'right':
+                pos[0]++;
+                break;
+        }
+        //is the play in the center?
+        if( this.active.move(this.ctx, this._world, dir ) ){
+            if(this._world.isCenter(pos)[1]){
+                this._world.map.scrollMap(this.ctx,0,1)
+            }    
+        }
+
+    }
+
+    canMove(x,y, isNPC){
+        if(!this.map.canMove(x,y)){
+            return false;
+        }
+        if(this.entities.find(e=>e.x===x&&e.y===y)){
+            return false;
+        }
+        if( isNPC ){
+            if( x === this.active.x && y === this.active.y){
+                return false
+            }
+        }
+        return true
+    }
+
     render (ctx, timestamp){
         ctx.clearRect(0,0,ctx.canvas.width, ctx.canvas.height)
         this.#map.draw(ctx,timestamp);
 
         this.entities.forEach(o => {
             o.draw(ctx,timestamp)
-            o.updateAnimate(ctx,timestamp)
+            o.updateAnimate(ctx, this, timestamp)
         })
+        this.active.draw(ctx,timestamp)
+        this.active.updateAnimate(ctx, this, timestamp)
     }
 
     select(x,y){

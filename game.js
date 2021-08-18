@@ -16,7 +16,7 @@ export class Game{
         this.canvas.focus();
 
         this._world = new World(this.ctx);
-        this._world.init();
+        await this._world.init();
         let self = this;
 
         window.addEventListener('resize', function(){self.resizeCanvas()}, false);
@@ -47,7 +47,7 @@ export class Game{
     }
 
     keyDown(e){
-        this._world.select()
+        //this._world.select()
         let pos = this._world.active.position
         switch(e.key){
             case " ": 
@@ -71,13 +71,10 @@ export class Game{
                     this._world.map.scrollMap(this.ctx,1,0)
                 }
                 else{
-                    this._world.active.face(this.ctx,'right');
-                    if(this._world.map.canMove(pos[0]+1,pos[1])){
-                        if(this._world.isCenter(pos)[0]){
-                            this._world.map.scrollMap(this.ctx,1,0)
-                        }
-                        this._world.active.move(this.ctx,'right');
+                    if(this._world.isCenter(pos)[0]){
+                        this._world.map.scrollMap(this.ctx,1,0)
                     }
+                    this._world.active.move(this.ctx, this._world, 'right');
                     this.world.checkEvent(this.ctx)
                 }
                 break;
@@ -86,13 +83,10 @@ export class Game{
                     this._world.map.scrollMap(this.ctx,-1,0)
                 }
                 else{
-                    this._world.active.face(this.ctx,'left');
-                    if(this._world.map.canMove(pos[0]-1,pos[1])){
-                        if(this._world.isCenter(pos)[0]){
-                            this._world.map.scrollMap(this.ctx,-1,0)
-                        }
-                        this._world.active.move(this.ctx,'left'); 
+                    if(this._world.isCenter(pos)[0]){
+                        this._world.map.scrollMap(this.ctx,-1,0)
                     }
+                    this._world.active.move(this.ctx, this._world,'left'); 
                     this.world.checkEvent(this.ctx)
                 } 
                 break;
@@ -101,14 +95,10 @@ export class Game{
                     this._world.map.scrollMap(this.ctx,0,1)
                 }
                 else{
-                    this._world.active.face(this.ctx,'down');
-                    if(this._world.map.canMove(pos[0],pos[1]+1)){
-                        //is the play in the center?
-                        if(this._world.isCenter(pos)[1]){
-                            this._world.map.scrollMap(this.ctx,0,1)
-                        }
-                        this._world.active.move(this.ctx,'down'); 
+                    if(this._world.isCenter(pos)[1]){
+                        this._world.map.scrollMap(this.ctx,0,1)
                     }
+                    this._world.active.move(this.ctx, this._world, 'down' ); 
                     this.world.checkEvent(this.ctx)
                 }
                 break;
@@ -117,14 +107,10 @@ export class Game{
                     this._world.map.scrollMap(this.ctx,0,-1)
                 }
                 else{
-                    this._world.active.face(this.ctx,'up');
-                    if(this._world.map.canMove(pos[0],pos[1]-1)){
-                        //is the play in the center?
-                        if(this._world.isCenter(pos)[1]){
-                            this._world.map.scrollMap(this.ctx,0,-1)
-                        }
-                        this._world.active.move(this.ctx,'up'); 
+                    if(this._world.isCenter(pos)[1]){
+                        this._world.map.scrollMap(this.ctx,0,-1)
                     }
+                    this._world.active.move(this.ctx, this._world,'up'); 
                     this.world.checkEvent(this.ctx)
                 }
                 break;
@@ -138,7 +124,7 @@ export class Game{
     };
     
     mouseUp(e){
-        this._world.select(e.offsetX,e.offsetY)
+        //this._world.select(e.offsetX,e.offsetY)
     };
         
 }
