@@ -8,8 +8,8 @@ export class NPC extends Sprite{
         this.animate = true;
         this.animate_move = true;
         this.offset = [0,38]
-
-        this.state = 'idle'
+        this.states = options.states;
+        this.curr_state = this.states[0]
     }
 
     updateAnimate(ctx, world, timestamp){
@@ -19,8 +19,8 @@ export class NPC extends Sprite{
         }
         const elapsed = timestamp - this.animate_start;
 
-        if( 'idle' === this.state ){
-            if( elapsed > 1500){
+        if( 'idle' === this.curr_state.id ){
+            if( elapsed > this.curr_state.time){
                 const dirArr = ['up','down','left','right'];
                 this.move(ctx, world, dirArr[Math.floor(Math.random() * dirArr.length)])
                 this.animate = true;

@@ -10,7 +10,7 @@
         "states":[
             {
                 "id":"idle",
-                "time": 1500
+                "time": 2500
             }
         ]
     }
