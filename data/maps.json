@@ -5,7 +5,17 @@
         "tilesPath":"./maps/overworld.json",
         "imgPath":"./img/Overworld.png",
         "origin":[0,0],
-        "spawn":[12,7]
+        "spawn":[12,7],
+        "entities":[
+            {
+                "id":"NPC1",
+                "spawn":[8,7]
+            },
+            {
+                "id":"NPC1",
+                "spawn":[32,3]
+            }            
+        ]
     },
     {
         "name":"house",
@@ -21,6 +31,13 @@
         "tilesPath":"./maps/cave.json",
         "imgPath":"./img/cave.png",
         "origin":[0,0],
-        "spawn":[3,1]
+        "spawn":[3,1],
+        "entities":[
+            {
+                "id":"NPC1",
+                "spawn":[8,4]
+            }            
+        ]
+
     }
 ]

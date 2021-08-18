@@ -1,5 +1,5 @@
 import {Map} from './map.js';
-import {NPC} from './thing.js';
+import {NPC} from './npc.js';
 import {clamp,fetchRemoteResource} from './util.js';
 
 export class World{
@@ -42,8 +42,8 @@ export class World{
         this.player = o
     }
 
-    addNPC(o){
-        this.entities.push( new NPC(o) )
+    addNPC(o,x,y){
+        this.entities.push( new NPC(o,x,y) )
     }
 
     savePosition(){
@@ -71,10 +71,23 @@ export class World{
     }
 
     async loadMap(ctx,mapToLoad){
-        let map = await this.findMap(mapToLoad)
-        this.#map = new Map(map);
+        let mapConfig = await this.findMap(mapToLoad)
+        this.#map = new Map(mapConfig);
         await this.#map.load(ctx);
-        this.player.position = {x:map.spawn[0],y:map.spawn[1]}
+        this.player.position = {x:mapConfig.spawn[0],y:mapConfig.spawn[1]}
+        
+        // setup all the NPCs
+        this.removeAll();
+        if( mapConfig.entities ){
+            mapConfig.entities.forEach(npc=>{
+                let i = this.#npcList.find(n=>npc.id===n.name)
+                if( i ){
+                    this.addNPC(i,npc.spawn[0],npc.spawn[1])
+                }
+            })
+        }
+
+        // position the map on the screen
         let dx = clamp(Math.ceil(ctx.canvas.width / 48),0,this.#map.width)
         let dy = clamp(Math.ceil(ctx.canvas.height / 48),0,this.#map.height)
 
@@ -91,7 +104,6 @@ export class World{
             this.map.y = clamp((this.player.position[1]-this.center[1]),0,this.#map.height-dy)
         }
 
-        this.addNPC(this.#npcList[0])
     }
 
     addObject(o){
@@ -114,6 +126,10 @@ export class World{
         })
     }
 
+    removeAll(){
+        this.entities = []
+    }
+
     canMove(x,y, isNPC){
         if(!this.map.canMove(x,y)){
             return false;
@@ -133,7 +149,8 @@ export class World{
         ctx.clearRect(0,0,ctx.canvas.width, ctx.canvas.height)
         this.#map.draw(ctx,timestamp);
 
-        this.entities.forEach(o => {
+        this.entities.sort( (l,r) => l.y < r.y )
+        .forEach(o => {
             o.draw(ctx,timestamp)
             o.updateAnimate(ctx, this, timestamp)
         })
