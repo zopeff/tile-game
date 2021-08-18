@@ -83,7 +83,7 @@ export class Sprite extends Thing{
         this.playAnimation(ctx, 1)
     }
     
-    fire(ctx, finished){
+    fire(ctx, world, finished){
         if( this.animate ){
             return; // only one at a time
         }
@@ -92,15 +92,30 @@ export class Sprite extends Thing{
         this.max_frame = 4;
         this.animate = true
         this.animate_move = false;
-        this.animate_finished = finished;
+        this.animate_finished = function(ctx,world){
+            let x = world.player.position[0]
+            let y = world.player.position[1]
+            switch(world.player.position[4]){
+                case 'up':y--;break;
+                case 'down':y++;break;
+                case 'right':x++;break;
+                case 'left':x--;break;
+            }
+            if( world.map.canBreak(x,y)){
+                world.map.updateMap(x,y,0)
+            }
+            let h = world.find(x,y)
+            if( h ){
+                world.remove(h)
+            }
+        };
     }
 
     hit(x,y){
-        return ( x > this.x && 
-            x < this.x+(this.width*this.scale_x) &&
-            y > this.y &&
-            y < this.y+(this.height*this.scale_y)
-            );
+        console.log(this.name,x,y, this.x, this.y)
+        //     this.x && x < this.x+(this.width*this.scale_x),y > this.y,y > this.y &&
+        //     y < this.y+(this.height*this.scale_y))
+        return ( x === this.x && y === this.y )
     }
 
     face(ctx, dir){
@@ -174,7 +189,7 @@ export class Sprite extends Thing{
             this.animate_start = timestamp;
             if( this.frame > this.max_frame ){
                 if(this.animate_finished){
-                    this.animate_finished()
+                    this.animate_finished(ctx,world)
                 };
                 this.frame = 0;
                 this.column = 0;
@@ -229,6 +244,8 @@ export class NPC extends Sprite{
         this.animate = true;
         this.animate_move = true;
         this.offset = [0,38]
+
+        this.state = 'idle'
     }
 
     updateAnimate(ctx, world, timestamp){
@@ -238,11 +255,13 @@ export class NPC extends Sprite{
         }
         const elapsed = timestamp - this.animate_start;
 
-        if( elapsed > 1500){
-            const dirArr = ['up','down','left','right'];
-            this.move(ctx, world, dirArr[Math.floor(Math.random() * dirArr.length)])
-            this.animate = true;
-            this.animate_start = timestamp; 
-        }        
+        if( 'idle' === this.state ){
+            if( elapsed > 1500){
+                const dirArr = ['up','down','left','right'];
+                this.move(ctx, world, dirArr[Math.floor(Math.random() * dirArr.length)])
+                this.animate = true;
+                this.animate_start = timestamp; 
+            }        
+        }
     }
 }

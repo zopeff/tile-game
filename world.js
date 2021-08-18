@@ -23,7 +23,7 @@ export class World{
     }
 
     checkEvent(ctx){
-        let e = this.#map.checkEvents(this.active.position[0],this.active.position[1])
+        let e = this.#map.checkEvents(this.player.position[0],this.player.position[1])
         if( e ){
             e(ctx, this)
         }
@@ -39,7 +39,7 @@ export class World{
 
     addPlayer(o){
         //this.entities.push(o)
-        this.active = o
+        this.player = o
     }
 
     addNPC(o){
@@ -48,14 +48,14 @@ export class World{
 
     savePosition(){
         this.savedPositions.push({
-            spawn:this.active.position,
+            spawn:this.player.position,
             origin:[this.map.x,this.map.y]
         })
     }
 
     restorePosition(){
         let old = this.savedPositions.pop()
-        this.active.position = {x:old.spawn[0],y:old.spawn[1]}
+        this.player.position = {x:old.spawn[0],y:old.spawn[1]}
         this.map.x = old.origin[0]
         this.map.y = old.origin[1]
     }
@@ -74,7 +74,7 @@ export class World{
         let map = await this.findMap(mapToLoad)
         this.#map = new Map(map);
         await this.#map.load(ctx);
-        this.active.position = {x:map.spawn[0],y:map.spawn[1]}
+        this.player.position = {x:map.spawn[0],y:map.spawn[1]}
         let dx = clamp(Math.ceil(ctx.canvas.width / 48),0,this.#map.width)
         let dy = clamp(Math.ceil(ctx.canvas.height / 48),0,this.#map.height)
 
@@ -84,11 +84,11 @@ export class World{
             return
         }
 
-        if( this.active.position[0] != this.center[0] ){
-            this.map.x = clamp(this.active.position[0]-this.center[0],0,this.#map.width-dx)
+        if( this.player.position[0] != this.center[0] ){
+            this.map.x = clamp(this.player.position[0]-this.center[0],0,this.#map.width-dx)
         }
-        if( this.active.position[1] != this.center[1] ){
-            this.map.y = clamp((this.active.position[1]-this.center[1]),0,this.#map.height-dy)
+        if( this.player.position[1] != this.center[1] ){
+            this.map.y = clamp((this.player.position[1]-this.center[1]),0,this.#map.height-dy)
         }
 
         this.addNPC(this.#npcList[0])
@@ -101,35 +101,17 @@ export class World{
     get map(){return this.#map}
 
     find(x,y){
-        return this.entities.filter(o=>{
+        let o = this.entities.find(o=>{
             return o.hit(x,y)
         })
+        console.log( "Hit:  ",o)
+        return o
     }
 
-    movePlayer(ctx, dir){
-        let pos = this.active.position
-//        this._world.active.face(this.ctx,dir);
-        switch(dir){
-            case 'down':
-                pos[1]++
-                break;
-            case 'up':
-                pos[1]--;
-                break;
-            case 'left':
-                pos[0]--;
-                break;
-            case 'right':
-                pos[0]++;
-                break;
-        }
-        //is the play in the center?
-        if( this.active.move(this.ctx, this._world, dir ) ){
-            if(this._world.isCenter(pos)[1]){
-                this._world.map.scrollMap(this.ctx,0,1)
-            }    
-        }
-
+    remove(r){
+        this.entities = this.entities.filter(o=>{
+            return r!=o
+        })
     }
 
     canMove(x,y, isNPC){
@@ -140,7 +122,7 @@ export class World{
             return false;
         }
         if( isNPC ){
-            if( x === this.active.x && y === this.active.y){
+            if( x === this.player.x && y === this.player.y){
                 return false
             }
         }
@@ -155,17 +137,17 @@ export class World{
             o.draw(ctx,timestamp)
             o.updateAnimate(ctx, this, timestamp)
         })
-        this.active.draw(ctx,timestamp)
-        this.active.updateAnimate(ctx, this, timestamp)
+        this.player.draw(ctx,timestamp)
+        this.player.updateAnimate(ctx, this, timestamp)
     }
 
     select(x,y){
         if(!x || !y){
-            this.active = this.entities[0]
+            this.player = this.entities[0]
         }
         else{
-            this.active = this.find(x,y)[0]
+            this.player = this.find(x,y)[0]
         }
-        return this.active;
+        return this.player;
     }
 }

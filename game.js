@@ -48,23 +48,13 @@ export class Game{
 
     keyDown(e){
         //this._world.select()
-        let pos = this._world.active.position
+        let pos = this._world.player.position
         switch(e.key){
+            case "e":
+
+                break;
             case " ": 
-                let self = this;
-                this._world.active.fire(this.ctx,function(){
-                        let x = pos[0]
-                        let y = pos[1]
-                        switch(self._world.active.position[4]){
-                            case 'up':y--;break;
-                            case 'down':y++;break;
-                            case 'right':x++;break;
-                            case 'left':x--;break;
-                        }
-                        if( self._world.map.canBreak(x,y)){
-                            self._world.map.updateMap(x,y,0)
-                        }
-                }); 
+                this._world.player.fire(this.ctx,this.world); 
                 break;
             case "ArrowRight":
                 if(e.shiftKey){
@@ -74,7 +64,7 @@ export class Game{
                     if(this._world.isCenter(pos)[0]){
                         this._world.map.scrollMap(this.ctx,1,0)
                     }
-                    this._world.active.move(this.ctx, this._world, 'right');
+                    this._world.player.move(this.ctx, this._world, 'right');
                     this.world.checkEvent(this.ctx)
                 }
                 break;
@@ -86,7 +76,7 @@ export class Game{
                     if(this._world.isCenter(pos)[0]){
                         this._world.map.scrollMap(this.ctx,-1,0)
                     }
-                    this._world.active.move(this.ctx, this._world,'left'); 
+                    this._world.player.move(this.ctx, this._world,'left'); 
                     this.world.checkEvent(this.ctx)
                 } 
                 break;
@@ -98,7 +88,7 @@ export class Game{
                     if(this._world.isCenter(pos)[1]){
                         this._world.map.scrollMap(this.ctx,0,1)
                     }
-                    this._world.active.move(this.ctx, this._world, 'down' ); 
+                    this._world.player.move(this.ctx, this._world, 'down' ); 
                     this.world.checkEvent(this.ctx)
                 }
                 break;
@@ -110,12 +100,12 @@ export class Game{
                     if(this._world.isCenter(pos)[1]){
                         this._world.map.scrollMap(this.ctx,0,-1)
                     }
-                    this._world.active.move(this.ctx, this._world,'up'); 
+                    this._world.player.move(this.ctx, this._world,'up'); 
                     this.world.checkEvent(this.ctx)
                 }
                 break;
         }
-        // pos = this._world.active.position
+        // pos = this._world.player.position
         // let worldEvent = this._world.checkEvent(pos[0],pos[1])
         // if( worldEvent ){
         //     worldEvent(this.ctx,this._world)
