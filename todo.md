@@ -1,36 +1,56 @@
-[ ] debug window
+Debugging
+    load any map
+    find any NPC
+    trigger NPC state
+    teleport
+    spawn item
+    trigger environment state
 
-apply default properties to all
+Optimizations
+    apply default properties to all
+    limit screen width for large monitors?
+    Resource Pool
+        images
+        fonts
+        etc
 
-[x] multiple maps
+multiple maps
     [x] load map
     map events
 
-[ ] animations
+animations
     destruction
     environmental
     reactions
     transitions
 
-- interact
-    * chest
-    * door
-    * button
-    * push/pull
+interact
+    chest
+    door
+    button
+    push/pull
 
 player
-    walk animation
+    [x] move
+    [x] attack
+    smooth map / walk animation
     health/damage
     inventory / pickups
     death
 npc
-    [x] walk
+    [ ] walk
+        [x] random
+        limited area
+        path
+        goal
     [x] speak
     conversation/interact
 enemy
-    boss
+    [x] kill/remove
+    types
     walk
     attack
+    die
 sound
     bg music
     effects
@@ -41,10 +61,24 @@ weather
     day/night
     rain
 
-title
-loading screen
-health
-score
+environment/items
+    dark cave + lantern item
+    water + boat
+    cliff + rope/ladder
+    castle + disguise
+
+weapons
+    sword
+    bow
+    magic wand
+
+screens
+    title
+    loading screen
+    health
+    score
+    transitions
+
 items/inventory
 game state
     save
@@ -56,6 +90,7 @@ multiplayer?
 
 controls
     gamepad
+    touch?
 
 
 Real Tiles
