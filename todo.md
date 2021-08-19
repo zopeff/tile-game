@@ -3,7 +3,7 @@
 apply default properties to all
 
 [x] multiple maps
-    load map
+    [x] load map
     map events
 
 [ ] animations
@@ -24,8 +24,9 @@ player
     inventory / pickups
     death
 npc
-    walk
-    talk
+    [x] walk
+    [x] speak
+    conversation/interact
 enemy
     boss
     walk

@@ -10,6 +10,13 @@ export class NPC extends Sprite{
         this.offset = [0,38]
         this.states = options.states;
         this.curr_state = this.states[0]
+        import('./data/npc/'+this.name+'.states.js').then(module=>{
+            this.stateHandlers = new module.default(this)
+        })
+    }
+
+    udpateState(){
+
     }
 
     updateAnimate(ctx, world, timestamp){
@@ -19,13 +26,10 @@ export class NPC extends Sprite{
         }
         const elapsed = timestamp - this.animate_start;
 
-        if( 'idle' === this.curr_state.id ){
-            if( elapsed > this.curr_state.time){
-                const dirArr = ['up','down','left','right'];
-                this.move(ctx, world, dirArr[Math.floor(Math.random() * dirArr.length)])
-                this.animate = true;
-                this.animate_start = timestamp; 
-            }        
+        if( this.stateHandlers ){
+            if( elapsed > 100 ){
+                this.stateHandlers.updateState(ctx,world, timestamp)
+            }
         }
     }
 }

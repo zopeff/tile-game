@@ -1,5 +1,6 @@
 import {World} from './world.js';
 import {Sprite} from './thing.js';
+import {SpeechBubble} from './speech.js';
 
 export class Game{
     #_world;
@@ -9,11 +10,13 @@ export class Game{
     constructor(id){
         this.canvas = document.getElementById(id);
         this.ctx = this.canvas.getContext('2d');    
+        window.game = this;
     }
 
     async init(){
         this.resizeCanvas();
         this.canvas.focus();
+        this.speech = new SpeechBubble()
 
         this._world = new World(this.ctx);
         await this._world.init();
@@ -25,7 +28,7 @@ export class Game{
 
         this._world.addPlayer( new Sprite("link", 0, 0, 'img/link_all.png'))
         await this._world.loadMap(this.ctx )
-
+        
         window.requestAnimationFrame(function(timestamp){self.render(timestamp)});
     }
 
@@ -36,6 +39,7 @@ export class Game{
         let self = this;
 
         this._world.render(this.ctx, timestamp)
+        this.speech.draw(this.ctx, this.world)
 
         window.requestAnimationFrame(function(timestamp){self.render(timestamp)});
     }

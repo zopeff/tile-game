@@ -1,3 +1,4 @@
+import { Game } from './game.js';
 import {Map} from './map.js';
 import {NPC} from './npc.js';
 import {clamp,fetchRemoteResource} from './util.js';
@@ -76,6 +77,7 @@ export class World{
         await this.#map.load(ctx);
         this.player.position = {x:mapConfig.spawn[0],y:mapConfig.spawn[1]}
         
+        window.game.speech.removeAll()
         // setup all the NPCs
         this.removeAll();
         if( mapConfig.entities ){

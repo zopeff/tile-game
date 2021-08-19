@@ -10,7 +10,18 @@
         "states":[
             {
                 "id":"idle",
+                "from":"*",
                 "time": 2500
+            },
+            {
+                "id":"speak",
+                "from":"idle",
+                "time": 500,
+                "data": [
+                    "Put the pram in the deli",
+                    "Hello!",
+                    "buggerit!"
+                ]
             }
         ]
     }

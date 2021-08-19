@@ -125,8 +125,6 @@ export class Map{
 
         if (this.animate_start === undefined){
             this.animate_start = timestamp;
-            //this.l=0
-
         }
         const elapsed = timestamp - this.animate_start;
 
@@ -137,17 +135,11 @@ export class Map{
                 let sy = 0
                 for(let y = this.y; y < this.y+dy; y++,sy+=48){
                     let sx = 0
-                    //if( dx == layer.width){
-                    //    sx = 48*((Math.ceil(ctx.canvas.width / 48) - dx)/2)
-                    //}
                     for(let x = this.x; x < this.x+dx; x++,sx+=48){
                         let i = y*layer.width+x
                         let t = layer.data[i]-1
                         if( t > -1){
                             t = this.getTileFrame(t,elapsed)
-                            // if(this.l==0){
-                            //     console.log(sx,sy,((t % 40) * 16),(Math.floor(t/40) * 16))
-                            // }
                             ctx.drawImage(this.#tiles, 
                                 ((t % 40) * 16), 
                                 (Math.floor(t/40) * 16),
@@ -156,7 +148,6 @@ export class Map{
                                 48, 48);    
                         }
                     }    
-                    //this.l=1
                 } 
             }         
         });
