@@ -1,6 +1,7 @@
 [
     {
         "name":"NPC1",
+        "id":"NPC1",
         "tiles":{
             "img":"img/NPC_test.png",
             "width":16,
@@ -19,8 +20,11 @@
                 "time": 500,
                 "data": [
                     "Put the pram in the deli",
-                    "Hello!",
-                    "buggerit!"
+                    "Millennium Hand and Shrimp",
+                    "Buggerit!",
+                    "This is all wrong",
+                    "The rabbit was too fast",
+                    "You're welcome!"
                 ]
             }
         ]
