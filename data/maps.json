@@ -8,10 +8,12 @@
         "spawn":[12,7],
         "entities":[
             {
+                "name":"Foul Ole Ron",
                 "id":"NPC1",
                 "spawn":[8,7]
             },
             {
+                "name":"Joe",
                 "id":"NPC1",
                 "spawn":[32,3]
             }            
@@ -34,6 +36,7 @@
         "spawn":[3,1],
         "entities":[
             {
+                "name":"Caveman",
                 "id":"NPC1",
                 "spawn":[8,4]
             }            

@@ -3,6 +3,7 @@ import {Sprite} from "./thing.js"
 export class NPC extends Sprite{
     constructor(options,x,y){
         super(options.name,x,y,options.tiles.img)
+        this.id = options.id;
         this.width = options.tiles.width;
         this.height = options.tiles.height;
         this.animate = true;
@@ -10,7 +11,7 @@ export class NPC extends Sprite{
         this.offset = [0,38]
         this.states = options.states;
         this.curr_state = this.states[0]
-        import('./data/npc/'+this.name+'.states.js').then(module=>{
+        import('./data/npc/'+this.id+'.states.js').then(module=>{
             this.stateHandlers = new module.default(this)
         })
     }

@@ -82,8 +82,9 @@ export class World{
         this.removeAll();
         if( mapConfig.entities ){
             mapConfig.entities.forEach(npc=>{
-                let i = this.#npcList.find(n=>npc.id===n.name)
+                let i = this.#npcList.find(n=>npc.id===n.id)
                 if( i ){
+                    i.name = npc.name
                     this.addNPC(i,npc.spawn[0],npc.spawn[1])
                 }
             })
@@ -148,16 +149,26 @@ export class World{
     }
 
     render (ctx, timestamp){
+        if (this.animate_start === undefined){
+            this.animate_start = timestamp;
+        }
+        const elapsed = timestamp - this.animate_start;
+
         ctx.clearRect(0,0,ctx.canvas.width, ctx.canvas.height)
         this.#map.draw(ctx,timestamp);
 
         this.entities.sort( (l,r) => l.y < r.y )
         .forEach(o => {
             o.draw(ctx,timestamp)
-            o.updateAnimate(ctx, this, timestamp)
+            if(elapsed > 500){
+                o.updateAnimate(ctx, this, timestamp)
+                this.animate_start = timestamp;
+            }
         })
         this.player.draw(ctx,timestamp)
-        this.player.updateAnimate(ctx, this, timestamp)
+        //if(elapsed > 500){
+            this.player.updateAnimate(ctx, this, timestamp)
+       // }
     }
 
     select(x,y){
