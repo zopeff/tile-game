@@ -175,6 +175,7 @@ export class Sprite extends Thing{
         this.max_frame = 5
         this.animate = true;
         this.animate_move = true;
+        return success;
     }
 
     updateAnimate(ctx, world, timestamp){

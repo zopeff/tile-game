@@ -65,10 +65,9 @@ export class Game{
                     this._world.map.scrollMap(this.ctx,1,0)
                 }
                 else{
-                    if(this._world.isCenter(pos)[0]){
+                    if(this._world.player.move(this.ctx, this._world, 'right') && this._world.isCenter(pos)[0]){
                         this._world.map.scrollMap(this.ctx,1,0)
                     }
-                    this._world.player.move(this.ctx, this._world, 'right');
                     this.world.checkEvent(this.ctx)
                 }
                 break;
@@ -77,10 +76,11 @@ export class Game{
                     this._world.map.scrollMap(this.ctx,-1,0)
                 }
                 else{
-                    if(this._world.isCenter(pos)[0]){
+                    if(this._world.player.move(this.ctx, this._world,'left') && 
+                        this._world.isCenter(pos)[0]){
                         this._world.map.scrollMap(this.ctx,-1,0)
                     }
-                    this._world.player.move(this.ctx, this._world,'left'); 
+                     
                     this.world.checkEvent(this.ctx)
                 } 
                 break;
@@ -89,10 +89,10 @@ export class Game{
                     this._world.map.scrollMap(this.ctx,0,1)
                 }
                 else{
-                    if(this._world.isCenter(pos)[1]){
+                    if(this._world.player.move(this.ctx, this._world, 'down' ) && 
+                        this._world.isCenter(pos)[1]){
                         this._world.map.scrollMap(this.ctx,0,1)
                     }
-                    this._world.player.move(this.ctx, this._world, 'down' ); 
                     this.world.checkEvent(this.ctx)
                 }
                 break;
@@ -101,20 +101,15 @@ export class Game{
                     this._world.map.scrollMap(this.ctx,0,-1)
                 }
                 else{
-                    if(this._world.isCenter(pos)[1]){
+                    if(this._world.player.move(this.ctx, this._world,'up') && 
+                        this._world.isCenter(pos)[1]){
                         this._world.map.scrollMap(this.ctx,0,-1)
                     }
-                    this._world.player.move(this.ctx, this._world,'up'); 
+                    ; 
                     this.world.checkEvent(this.ctx)
                 }
                 break;
         }
-        // pos = this._world.player.position
-        // let worldEvent = this._world.checkEvent(pos[0],pos[1])
-        // if( worldEvent ){
-        //     worldEvent(this.ctx,this._world)
-        // }
-
     };
     
     mouseUp(e){
