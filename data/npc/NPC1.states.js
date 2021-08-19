@@ -9,10 +9,11 @@ export default class StateHandlers {
         if( 'idle' == this.self.curr_state.id){
             if('speak' == to && this.self.y > 3){
                 this.self.curr_state = this.self.states[1]
-                console.log(this.self.name,"SPEAK",this.self.x, this.self.y)
+                let msg = this.self.curr_state.data[Math.floor(Math.random() * this.self.curr_state.data.length)]
+                console.log(this.self.name,"SPEAK",this.self.x, this.self.y, '"'+msg+'"')
                 let x = (this.self.x*48)
                 let y = ((this.self.y*48))
-                this.curr_message = window.game.speech.addMessage(x,y,this.self.curr_state.data[Math.floor(Math.random() * this.self.curr_state.data.length)]);
+                this.curr_message = window.game.speech.addMessage(x,y,msg);
             }
         }
         else if( 'speak' == this.self.curr_state.id){
