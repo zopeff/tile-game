@@ -39,7 +39,6 @@ export class World{
     }
 
     addPlayer(o){
-        //this.entities.push(o)
         this.player = o
     }
 

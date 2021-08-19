@@ -6,6 +6,11 @@ export class Game{
     #_world;
     #canvas;
     #ctx;
+    // debug helpers
+    dbg_loadMap(name){
+        this._world.loadMap(this.ctx,name)
+    }
+    //
 
     constructor(id){
         this.canvas = document.getElementById(id);
@@ -32,7 +37,7 @@ export class Game{
         window.requestAnimationFrame(function(timestamp){self.render(timestamp)});
     }
 
-    get world(){return this._world}
+    get world(){return this.#_world}
     
 
     render(timestamp){
