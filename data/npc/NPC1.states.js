@@ -1,34 +1,10 @@
-export default class StateHandler {
+import {StateHandler} from '../../statehandler.js'
+export default class NPCStateHandler extends StateHandler{
     constructor(parent){
-        this.self = parent
+        super(parent)
         this.curr_message = 0;
-        this.updating_state = false;
     }
     
-    get state(){
-        return this.self.curr_state
-    }
-    set state(to){
-        this.self.curr_state = this.self.states.find(s=>s.id===to)
-    }
-    
-    getState(find){
-        return this.self.states.find(s=>s.id===find)
-    }
-
-    can(to){
-        // can the current state transition to new state
-        if( !this.self.curr_state.to ){
-            return false; // probably not a valid config
-        }
-
-        if( '*'===this.self.curr_state.to[0] ){
-            return true;
-        }
-
-        return this.self.curr_state.to.find(s=>s===to)
-    }
-
     changeState(to, data){
         this.updating_state = true;
         // can we change from and to?
@@ -36,10 +12,10 @@ export default class StateHandler {
             return;
         }
         this.state = to
-        if('speak' === to && this.self.y > 3){
+        if('speak' === to && this.parent.y > 3){
             let msg = this.state.data[Math.floor(Math.random() * this.state.data.length)]
-            console.log(this.self.name,"SPEAK",this.self.x, this.self.y, '"'+msg+'"')
-            this.curr_message = window.game.speech.addMessage(this.self.x,this.self.y,msg);
+            console.log(this.parent.name,"SPEAK",this.parent.x, this.parent.y, '"'+msg+'"')
+            this.curr_message = window.game.speech.addMessage(this.parent.x,this.parent.y,msg);
         }        
         else if( 'idle' === to){
             window.game.speech.removeMessage(this.curr_message)
@@ -58,45 +34,45 @@ export default class StateHandler {
                 case 'right':
                     turn = 'left';break;
             }
-            this.self.face(data.ctx,turn)
-            console.log(this.self.name,"SPEAK",this.self.x, this.self.y, 'Hello!')
-            this.curr_message = window.game.speech.addMessage(this.self.x,this.self.y,"Hello!");
+            this.parent.face(data.ctx,turn)
+            console.log(this.parent.name,"SPEAK",this.parent.x, this.parent.y, 'Hello!')
+            this.curr_message = window.game.speech.addMessage(this.parent.x,this.parent.y,"Hello!");
         }
         this.updating_state = false;
     }
 
     updateState(ctx, world, timestamp){
-        const elapsed = timestamp - this.self.animate_start;
+        const elapsed = timestamp - this.parent.animate_start;
         if(this.updating_state){            
-            this.self.animate_start = timestamp; 
+            this.parent.animate_start = timestamp; 
             return;
         }
 
-        if( elapsed > this.self.curr_state.time){
-            if( 'idle' === this.self.curr_state.id ){
+        if( elapsed > this.state.time){
+            if( 'idle' === this.state.id ){
                 //move in a random direction
                 const dirArr = ['up','down','left','right'];
-                this.self.move(ctx, world, dirArr[Math.floor(Math.random() * dirArr.length)])
+                this.parent.move(ctx, world, dirArr[Math.floor(Math.random() * dirArr.length)])
                 if( 0==Math.floor(Math.random() * 2) ){
                     this.changeState("speak")
                 }
             }
-            else if('speak' === this.self.curr_state.id ){
+            else if('speak' === this.state.id ){
                 // done spaking, back to normal
                 if( 0==Math.floor(Math.random() * 5) ){
                     this.changeState("idle")
                 }
             }
-            else if( 'interact' === this.self.curr_state.id ){
+            else if( 'interact' === this.state.id ){
                 // is player still standing there?
-                if(!world.player.near(this.self.x, this.self.y)){
+                if(!world.player.near(this.parent.x, this.parent.y)){
                     // oh well
                     console.log("I guess you are done")
                     window.game.speech.removeMessage(this.curr_message)
                     this.changeState("idle")
                 }           
             }
-            this.self.animate_start = timestamp; 
+            this.parent.animate_start = timestamp; 
         }
     }
 }

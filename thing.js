@@ -265,6 +265,5 @@ export class Sprite extends Thing{
         // ctx.beginPath();
         // ctx.rect(...this.hitBox);
         // ctx.stroke();
-
     }
 }
