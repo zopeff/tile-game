@@ -60,7 +60,7 @@ export class Game{
         let pos = this.#world.player.position
         switch(e.key){
             case "e":
-
+                this.#world.player.interact(this.ctx,this.world); 
                 break;
             case " ": 
                 this.#world.player.fire(this.ctx,this.world); 

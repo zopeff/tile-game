@@ -11,12 +11,17 @@
         "states":[
             {
                 "id":"idle",
-                "from":"*",
+                "to":["*"],
+                "time": 2500
+            },
+            {
+                "id":"interact",
+                "to":["*"],
                 "time": 2500
             },
             {
                 "id":"speak",
-                "from":"idle",
+                "to":["idle","interact"],
                 "time": 500,
                 "data": [
                     "Put the pram in the deli",

@@ -147,6 +147,10 @@ export class World{
         return true
     }
 
+    canInteract(pos){
+        return this.entities.find(e=>(e.x===pos[0]&&e.y===pos[1]&&e.canInteract));
+    }
+
     render (ctx, timestamp){
         if (this.animate_start === undefined){
             this.animate_start = timestamp;

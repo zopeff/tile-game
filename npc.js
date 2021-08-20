@@ -12,9 +12,11 @@ export class NPC extends Sprite{
         this.states = options.states;
         this.curr_state = this.states[0]
         import('./data/npc/'+this.id+'.states.js').then(module=>{
-            this.stateHandlers = new module.default(this)
+            this.stateHandler = new module.default(this)
         })
     }
+
+    get canInteract(){return this.stateHandler.can('interract')}
 
     udpateState(){
 
@@ -27,9 +29,9 @@ export class NPC extends Sprite{
         }
         const elapsed = timestamp - this.animate_start;
 
-        if( this.stateHandlers ){
+        if( this.stateHandler ){
             if( elapsed > 100 ){
-                this.stateHandlers.updateState(ctx,world, timestamp)
+                this.stateHandler.updateState(ctx,world, timestamp)
             }
         }
     }

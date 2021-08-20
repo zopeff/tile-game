@@ -22,8 +22,8 @@ export class SpeechBubble{
 
     addMessage(x,y,msg){
         this.bubbles.push({
-            x:x-48,
-            y:y-144,
+            x:(x*48)-48,
+            y:(y*48)-144,
             message:msg
         })
         return this.bubbles.length
@@ -65,7 +65,6 @@ export class SpeechBubble{
 
                 return answer
             }
-
             let mx = msg.x-(world.map.x*48)
             let my = msg.y-(world.map.y*48)
 

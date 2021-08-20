@@ -20,6 +20,13 @@ export class Thing{
             y < this.y+this.height
             );
     }
+    get canInteract(){return false}
+
+    near(x,y){
+        // are we currently 1 block away?
+        return (this.x+1 === x || this.x-1 === x || this.x===x) && 
+        (this.y+1 === y || this.y-1 === y || this.y===y)
+    }
 
     move(ctx, world, x, y){
         let dx = this.x + Math.sign(x);
@@ -79,6 +86,30 @@ export class Sprite extends Thing{
 
     get position(){ return [this.x, this.y, this.width*this.scale_x, this.height*this.scale_y, this.facing]}
     set position(pos){this.x = pos.x; this.y=pos.y;}
+    get facingPosition(){
+        switch(this.facing){
+            case 'up':
+                return [this.x, this.y-1]
+            case 'down':
+                return [this.x, this.y+1]
+            case 'left':
+                return [this.x-1, this.y]
+            case 'right':
+                return [this.x+1, this.y]
+        }
+    }
+
+    interact(ctx, world){
+        // am I facing something to interact with?
+        let facing = this.facingPosition;
+        let o = world.canInteract(facing);
+        if(o){
+            console.log("Inteact with: " + o.name)
+            // trigger 'interact' state?
+            o.stateHandler.changeState('interact', {ctx:ctx,position:this.position})
+        }
+        
+    }
 
     action(ctx){
         this.playAnimation(ctx, 1)
