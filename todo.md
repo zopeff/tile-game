@@ -14,11 +14,14 @@ Optimizations
         fonts
         etc
 
-multiple maps
+Maps
     [x] load map
+    [x] enter/exit map areas
+    tiles from multiple tilesets
     map events
 
 animations
+    [x] tile
     destruction
     environmental
     reactions
@@ -38,9 +41,9 @@ player
     inventory / pickups
     death
 npc
-    [ ] walk
+    walk
         [x] random
-        limited area
+        restricted to area
         path
         goal
     [x] speak
@@ -58,7 +61,8 @@ story
     quest
     cinematics
 weather
-    day/night
+    night 
+    fog 
     rain
 
 environment/items
@@ -80,12 +84,14 @@ screens
     transitions
 
 items/inventory
+
 game state
     save
         create local object
         hash + checksum
         send to server
     load
+
 multiplayer?
 
 controls
@@ -93,4 +99,18 @@ controls
     touch?
 
 
-Real Tiles
+_Real_ Tiles
+
+
+--------
+Demo quest
+talk to npc
+npc tells you 
+    (a) something bad lives in the cave and to kill it
+    (a) something bad lives in the cave stole a rare item
+go to cave
+(kill monster)
+retrieve rare item
+return to npc
+win
+
