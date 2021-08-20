@@ -3,12 +3,12 @@ import {Sprite} from './thing.js';
 import {SpeechBubble} from './speech.js';
 
 export class Game{
-    #_world;
+    #world;
     #canvas;
     #ctx;
     // debug helpers
     dbg_loadMap(name){
-        this._world.loadMap(this.ctx,name)
+        this.world.loadMap(this.ctx,name)
     }
     //
 
@@ -23,27 +23,27 @@ export class Game{
         this.canvas.focus();
         this.speech = new SpeechBubble()
 
-        this._world = new World(this.ctx);
-        await this._world.init();
+        this.#world = new World(this.ctx);
+        await this.#world.init();
         let self = this;
 
         window.addEventListener('resize', function(){self.resizeCanvas()}, false);
         this.canvas.addEventListener('keydown', (e)=>self.keyDown(e),);
         this.canvas.addEventListener('mouseup', (e)=>self.mouseUp(e) );
 
-        this._world.addPlayer( new Sprite("link", 0, 0, 'img/link_all.png'))
-        await this._world.loadMap(this.ctx )
+        this.#world.addPlayer( new Sprite("link", 0, 0, 'img/link_all.png'))
+        await this.#world.loadMap(this.ctx )
         
         window.requestAnimationFrame(function(timestamp){self.render(timestamp)});
     }
 
-    get world(){return this.#_world}
+    get world(){return this.#world}
     
 
     render(timestamp){
         let self = this;
 
-        this._world.render(this.ctx, timestamp)
+        this.#world.render(this.ctx, timestamp)
         this.speech.draw(this.ctx, this.world)
 
         window.requestAnimationFrame(function(timestamp){self.render(timestamp)});
@@ -56,34 +56,34 @@ export class Game{
     }
 
     keyDown(e){
-        //this._world.select()
-        let pos = this._world.player.position
+        //this.#world.select()
+        let pos = this.#world.player.position
         switch(e.key){
             case "e":
 
                 break;
             case " ": 
-                this._world.player.fire(this.ctx,this.world); 
+                this.#world.player.fire(this.ctx,this.world); 
                 break;
             case "ArrowRight":
                 if(e.shiftKey){
-                    this._world.map.scrollMap(this.ctx,1,0)
+                    this.#world.map.scrollMap(this.ctx,1,0)
                 }
                 else{
-                    if(this._world.player.move(this.ctx, this._world, 'right') && this._world.isCenter(pos)[0]){
-                        this._world.map.scrollMap(this.ctx,1,0)
+                    if(this.#world.player.move(this.ctx, this.#world, 'right') && this.#world.isCenter(pos)[0]){
+                        this.#world.map.scrollMap(this.ctx,1,0)
                     }
                     this.world.checkEvent(this.ctx)
                 }
                 break;
             case "ArrowLeft":
                 if(e.shiftKey){
-                    this._world.map.scrollMap(this.ctx,-1,0)
+                    this.#world.map.scrollMap(this.ctx,-1,0)
                 }
                 else{
-                    if(this._world.player.move(this.ctx, this._world,'left') && 
-                        this._world.isCenter(pos)[0]){
-                        this._world.map.scrollMap(this.ctx,-1,0)
+                    if(this.#world.player.move(this.ctx, this.#world,'left') && 
+                        this.#world.isCenter(pos)[0]){
+                        this.#world.map.scrollMap(this.ctx,-1,0)
                     }
                      
                     this.world.checkEvent(this.ctx)
@@ -91,24 +91,24 @@ export class Game{
                 break;
             case "ArrowDown":
                 if(e.shiftKey){
-                    this._world.map.scrollMap(this.ctx,0,1)
+                    this.#world.map.scrollMap(this.ctx,0,1)
                 }
                 else{
-                    if(this._world.player.move(this.ctx, this._world, 'down' ) && 
-                        this._world.isCenter(pos)[1]){
-                        this._world.map.scrollMap(this.ctx,0,1)
+                    if(this.#world.player.move(this.ctx, this.#world, 'down' ) && 
+                        this.#world.isCenter(pos)[1]){
+                        this.#world.map.scrollMap(this.ctx,0,1)
                     }
                     this.world.checkEvent(this.ctx)
                 }
                 break;
             case "ArrowUp":
                 if(e.shiftKey){
-                    this._world.map.scrollMap(this.ctx,0,-1)
+                    this.#world.map.scrollMap(this.ctx,0,-1)
                 }
                 else{
-                    if(this._world.player.move(this.ctx, this._world,'up') && 
-                        this._world.isCenter(pos)[1]){
-                        this._world.map.scrollMap(this.ctx,0,-1)
+                    if(this.#world.player.move(this.ctx, this.#world,'up') && 
+                        this.#world.isCenter(pos)[1]){
+                        this.#world.map.scrollMap(this.ctx,0,-1)
                     }
                     ; 
                     this.world.checkEvent(this.ctx)
@@ -118,7 +118,7 @@ export class Game{
     };
     
     mouseUp(e){
-        //this._world.select(e.offsetX,e.offsetY)
+        //this.#world.select(e.offsetX,e.offsetY)
     };
         
 }
