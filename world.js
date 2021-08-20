@@ -157,6 +157,13 @@ export class World{
         this.#map.draw(ctx,timestamp);
 
         this.entities.sort( (l,r) => l.y < r.y )
+        .filter(o => {
+            // might be better to do this at the actual point
+            // of draw and avoid this extra loop
+            return (o.x >= this.map.x && o.y >= this.map.y &&
+                o.x < (this.map.x+Math.ceil(ctx.canvas.width/48)) && 
+                o.y < (this.map.y+Math.ceil(ctx.canvas.height/48)))
+        } )
         .forEach(o => {
             o.draw(ctx,timestamp)
             if(elapsed > 500){
