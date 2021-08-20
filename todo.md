@@ -17,6 +17,7 @@ Optimizations
 Maps
     [x] load map
     [x] enter/exit map areas
+    save world state between transitions
     tiles from multiple tilesets
     map events
 
@@ -86,6 +87,7 @@ screens
 items/inventory
 
 game state
+    entity state
     save
         create local object
         hash + checksum
