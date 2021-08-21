@@ -5,17 +5,19 @@
         "tilesPath":"./maps/overworld.json",
         "imgPath":"./img/Overworld.png",
         "origin":[0,0],
-        "spawn":[12,7],
+        "player":{
+            "position":[12,7]
+        },
         "entities":[
             {
                 "name":"Foul Ole Ron",
-                "id":"NPC1",
-                "spawn":[8,7]
+                "id":"Foul_Ron.NPC",
+                "position":[8,7]
             },
             {
                 "name":"Joe",
                 "id":"NPC1",
-                "spawn":[32,3]
+                "position":[32,3]
             }            
         ]
     },
@@ -25,7 +27,9 @@
         "tilesPath":"./maps/interrior.json",
         "imgPath":"./img/Inner.png",
         "origin":[0,0],
-        "spawn":[4,8]
+        "player":{
+            "position":[4,8]
+        }
     },
     {
         "name":"cave",
@@ -33,12 +37,14 @@
         "tilesPath":"./maps/cave.json",
         "imgPath":"./img/cave.png",
         "origin":[0,0],
-        "spawn":[3,1],
+        "player":{
+            "position":[3,1]
+        },
         "entities":[
             {
                 "name":"Caveman",
-                "id":"NPC1",
-                "spawn":[8,4]
+                "id":"Caveman.NPC",
+                "position":[8,4]
             }            
         ]
 

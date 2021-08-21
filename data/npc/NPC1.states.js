@@ -1,15 +1,16 @@
 import {StateHandler} from '../../statehandler.js'
-export default class NPCStateHandler extends StateHandler{
-    constructor(parent){
-        super(parent)
-        this.curr_message = 0;
+export class NPCStateHandler extends StateHandler{
+    constructor(parent, states){
+        super(parent, states)
+        this.curr_message = 0
     }
     
     changeState(to, data){
         this.updating_state = true;
         // can we change from and to?
         if( !this.can(to) ){
-            return;
+            console.log(this.parent.name,"Cannot", to)
+            return false;
         }
         this.state = to
         if('speak' === to && this.parent.y > 3){
@@ -35,10 +36,18 @@ export default class NPCStateHandler extends StateHandler{
                     turn = 'left';break;
             }
             this.parent.face(data.ctx,turn)
-            console.log(this.parent.name,"SPEAK",this.parent.x, this.parent.y, 'Hello!')
-            this.curr_message = window.game.speech.addMessage(this.parent.x,this.parent.y,"Hello!");
+            // maybe move to a new state called "talk"
+            // and only have foul ron have that state
+            if( this.can('talk') ){
+                this.changeState('talk',data)
+            }
+            else{
+                console.log(this.parent.name,"SPEAK",this.parent.x, this.parent.y, 'You should talk to Ron')  
+                this.curr_message = window.game.speech.addMessage(this.parent.x,this.parent.y,"You should talk to Ron...");
+            }
         }
         this.updating_state = false;
+        return true;
     }
 
     updateState(ctx, world, timestamp){
@@ -76,3 +85,5 @@ export default class NPCStateHandler extends StateHandler{
         }
     }
 }
+
+export default NPCStateHandler;

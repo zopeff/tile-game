@@ -30,6 +30,29 @@ export class World{
         }
     }
 
+    toJSON(){
+        let val = {world:{map:this.#map.name,player:this.player,entities:this.entities}}
+        return JSON.stringify(val)
+    }
+
+    async load(ctx, data){
+        await this.loadMap(ctx, data.map)
+
+        //reset everything the map might have loaded
+        this.reset()
+
+        if( data.entities ){
+            this.addEntities(data.entities)
+        }
+
+        this.player.load(data.player)
+        this.centerMapOnPlayer(ctx)
+    }
+
+    reset(){
+        this.removeAllEntities()
+    }
+
     constructor(ctx){
         ctx.world = this;
     }
@@ -44,20 +67,26 @@ export class World{
 
     addNPC(o,x,y){
         this.entities.push( new NPC(o,x,y) )
+        return this.entities[this.entities.length-1]
     }
 
     savePosition(){
-        this.savedPositions.push({
-            spawn:this.player.position,
-            origin:[this.map.x,this.map.y]
-        })
+        this.savedPositions.push(this.player.position)
     }
 
-    restorePosition(){
+    restorePosition(ctx){
         let old = this.savedPositions.pop()
-        this.player.position = {x:old.spawn[0],y:old.spawn[1]}
-        this.map.x = old.origin[0]
-        this.map.y = old.origin[1]
+        this.player.position = old;
+        this.centerMapOnPlayer(ctx)
+    }
+
+    centerMapOnPlayer(ctx){
+        // tiles across
+        let w = Math.ceil(ctx.canvas.width/48)
+        let h = Math.ceil(ctx.canvas.height/48)
+
+        this.map.x = clamp(this.player.position[0] - Math.ceil(w/2), 0, w)
+        this.map.y = clamp(this.player.position[1] - Math.ceil(h/2), 0, h)
     }
 
     async findMap(name){
@@ -70,21 +99,34 @@ export class World{
         return this.#mapList.find(map=>map.name===name)
     }
 
+    addEntities(npcList){
+        npcList.forEach(npc=>{
+            let i = this.#npcList.find(n=>npc.id===n.id)
+            if( i ){
+                i.name = npc.name ? npc.name : i.name
+                let e = this.addNPC(i,npc.position[0],npc.position[1])
+                if( npc.stateData ){
+                    e.restoreState(npc.stateData)
+                }
+            }
+        })
+    }
+
     async loadMap(ctx,mapToLoad){
         let mapConfig = await this.findMap(mapToLoad)
         this.#map = new Map(mapConfig);
         await this.#map.load(ctx);
-        this.player.position = {x:mapConfig.spawn[0],y:mapConfig.spawn[1]}
+        this.player.position = mapConfig.player.position
         
         window.game.speech.removeAll()
         // setup all the NPCs
-        this.removeAll();
+        this.removeAllEntities();
         if( mapConfig.entities ){
             mapConfig.entities.forEach(npc=>{
                 let i = this.#npcList.find(n=>npc.id===n.id)
                 if( i ){
                     i.name = npc.name
-                    this.addNPC(i,npc.spawn[0],npc.spawn[1])
+                    this.addNPC(i,npc.position[0],npc.position[1])
                 }
             })
         }
@@ -122,13 +164,13 @@ export class World{
         return o
     }
 
-    remove(r){
+    removeEntity(r){
         this.entities = this.entities.filter(o=>{
             return r!=o
         })
     }
 
-    removeAll(){
+    removeAllEntities(){
         this.entities = []
     }
 

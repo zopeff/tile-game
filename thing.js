@@ -82,10 +82,22 @@ export class Sprite extends Thing{
         this.animate_start;
         this.max_frame = 0;
         this.animate_finished = null;
+
+        this.inventory=[]
+    }
+
+    toJSON(){
+        let val = {id:'player',position:[this.position[0],this.position[1]],inventory:this.inventory}
+        return val;
+    }
+
+    load(data){
+        this.position = data.position
+        this.inventory = data.inventory
     }
 
     get position(){ return [this.x, this.y, this.width*this.scale_x, this.height*this.scale_y, this.facing]}
-    set position(pos){this.x = pos.x; this.y=pos.y;}
+    set position(pos){this.x = pos[0]; this.y=pos[1];}
     get facingPosition(){
         switch(this.facing){
             case 'up':
@@ -99,6 +111,19 @@ export class Sprite extends Thing{
         }
     }
 
+    give(thing){
+        this.addInventory(thing)
+    }
+    addInventory(inv){
+        this.inventory.push(inv)
+    }
+    hasInventory(itemName){
+        return this.inventory.find(item=>item.name===itemName)
+    }
+    removeInventory(itemName){
+        this.inventory.splice(this.inventory.findIndex(item=>item.name===itemName),1)
+    }
+
     interact(ctx, world){
         // am I facing something to interact with?
         let facing = this.facingPosition;
@@ -106,7 +131,7 @@ export class Sprite extends Thing{
         if(o){
             console.log("Inteact with: " + o.name)
             // trigger 'interact' state?
-            o.stateHandler.changeState('interact', {ctx:ctx,position:this.position})
+            o.stateHandler.changeState('interact', {position:this.position})
         }
         
     }

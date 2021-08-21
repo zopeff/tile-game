@@ -33,5 +33,85 @@
                 ]
             }
         ]
+    },
+    {
+        "name":"Foul Ole Ron",
+        "id":"Foul_Ron.NPC",
+        "tiles":{
+            "img":"img/NPC_test.png",
+            "width":16,
+            "height":32,
+            "frames":4
+        },
+        "states":[
+            {
+                "id":"idle",
+                "to":["*"],
+                "time": 2500
+            },
+            {
+                "id":"interact",
+                "to":["*"],
+                "time": 2500
+            },
+            {
+                "id":"talk",
+                "to":["*"],
+                "time": 2500
+            },
+            {
+                "id":"speak",
+                "to":["idle","interact"],
+                "time": 500,
+                "data": [
+                    "Put the pram in the deli",
+                    "Millennium Hand and Shrimp",
+                    "Bugrit!",
+                    "This is all wrong",
+                    "The rabbit was too fast",
+                    "You're welcome!"
+                ]
+            }
+        ]
+    },
+    {
+        "name":"Caveman",
+        "id":"Caveman.NPC",
+        "tiles":{
+            "img":"img/NPC_test.png",
+            "width":16,
+            "height":32,
+            "frames":4
+        },
+        "states":[
+            {
+                "id":"idle",
+                "to":["*"],
+                "time": 2500
+            },
+            {
+                "id":"interact",
+                "to":["*"],
+                "time": 2500
+            },
+            {
+                "id":"talk",
+                "to":["*"],
+                "time": 2500
+            },
+            {
+                "id":"speak",
+                "to":["idle","interact"],
+                "time": 500,
+                "data": [
+                    "Put the pram in the deli",
+                    "Millennium Hand and Shrimp",
+                    "Bugrit!",
+                    "This is all wrong",
+                    "The rabbit was too fast",
+                    "You're welcome!"
+                ]
+            }
+        ]
     }
 ]

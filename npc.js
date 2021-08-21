@@ -9,14 +9,35 @@ export class NPC extends Sprite{
         this.animate = true;
         this.animate_move = true;
         this.offset = [0,38]
-        this.states = options.states;
-        this.curr_state = this.states[0]
-        import('./data/npc/'+this.id+'.states.js').then(module=>{
-            this.stateHandler = new module.default(this)
-        })
+        this.loaded = false;
+        this.loadStateHandler(options);
     }
 
-    get canInteract(){return this.stateHandler.can('interract')}
+    async loadStateHandler(options){
+        await import('./data/npc/'+this.id+'.states.js').then(module=>{
+            this.loaded = true;
+            this.stateHandler = new module.default(this, options.states)
+        })
+
+    }
+
+    toJSON(){
+        let val = {name:this.name,id:this.id,position:[this.x,this.y],stateData:this.stateHandler}
+        return val
+    }
+
+    restoreState(data){
+        let self = this;
+        setTimeout(()=>{
+            if( !this.loaded ){
+                self.restoreState(data)
+                return;
+            }
+            this.stateHandler.data = data.data
+        },500)
+    }
+
+    get canInteract(){return this.stateHandler.can('interact')}
 
     udpateState(){
 

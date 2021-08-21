@@ -3,7 +3,7 @@ export default class MapEvents {
         if( y === 1 ){
             return async function(ctx,world){
                 await world.loadMap(ctx)
-                world.restorePosition();
+                world.restorePosition(ctx);
             }
         }
     }

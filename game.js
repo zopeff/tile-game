@@ -120,5 +120,18 @@ export class Game{
     mouseUp(e){
         //this.#world.select(e.offsetX,e.offsetY)
     };
+
+
+    save(){
+        let val = this.#world.toJSON();
+        window.localStorage.setItem("game",val)
+    }
+
+    load(){
+        this.speech.removeAll();
+        let val = window.localStorage.getItem("game")
+        let data = JSON.parse(val)
+        this.#world.load(this.ctx, data.world)
+    }
         
 }

@@ -61,6 +61,9 @@ export class Map{
     }
 
     canMove(x,y){
+        if( !this.map || !this.map.data ){
+            return;
+        }
         if(x<0||y<0||x>this.width||y>this.height){
             return false
         }
@@ -70,6 +73,9 @@ export class Map{
     }
 
     canBreak(x,y){
+        if( !this.map || !this.map.data){
+            return;
+        }
         if(x<0||y<0||x>this.width||y>this.height){
             return false
         }
