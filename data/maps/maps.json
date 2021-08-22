@@ -40,6 +40,9 @@
         "player":{
             "position":[3,1]
         },
+        "environment":[
+            "night"
+        ],
         "entities":[
             {
                 "name":"Caveman",
