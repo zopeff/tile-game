@@ -90,6 +90,7 @@ export class Rain{
     };
 
     draw(ctx, time){
+        ctx.save();
         let dt = time - this.lastTime;
         this.lastTime = time;
         if (dt > 100) { dt = FIXED_STEP; }
@@ -102,5 +103,6 @@ export class Rain{
         ctx.fillStyle = "rgba(0, 0, 0, 0.3)";
         ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
         this.renderDrops(ctx);
+        ctx.restore();
     } 
 }

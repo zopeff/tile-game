@@ -27,9 +27,7 @@ export class WeatherController{
     }
 
     draw(ctx, time){
-        ctx.save()
         this.currWeather.forEach(w=>w.draw(ctx,time))
-        ctx.restore();
     }
 
     toggleNight(ctx){

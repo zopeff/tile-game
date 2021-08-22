@@ -1,6 +1,6 @@
 export class Night{
     draw(ctx, timestamp){
-
+        ctx.save()
         ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
         let p = window.game.world.player.position
         let wX = window.game.world.map.x
@@ -36,5 +36,6 @@ export class Night{
         }
         ctx.fillStyle = gradient;
         ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        ctx.restore();
     }
 }
