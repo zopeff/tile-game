@@ -120,16 +120,18 @@ export class World{
     }
 
     addEntities(npcList){
-        npcList.forEach(npc=>{
-            let i = this.#npcList.find(n=>npc.id===n.id)
-            if( i ){
-                i.name = npc.name ? npc.name : i.name
-                let e = this.addNPC(i,npc.position[0],npc.position[1])
-                if( npc.stateData ){
-                    e.restoreState(npc.stateData)
+        if( npcList ){
+            npcList.forEach(npc=>{
+                let i = this.#npcList.find(n=>npc.id===n.id)
+                if( i ){
+                    i.name = npc.name ? npc.name : i.name
+                    let e = this.addNPC(i,npc.position[0],npc.position[1])
+                    if( npc.stateData ){
+                        e.restoreState(npc.stateData)
+                    }
                 }
-            }
-        })
+            })
+        }
     }
 
     centerMapOnPlayer(ctx){
