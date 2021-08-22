@@ -1,3 +1,4 @@
+8/20/21
 So, now that I have things wandering around, I thought I would ahve them do interesting things also. The first thing that jumped to mind is to have them blurt out random thing as if they are talking to themselves. This could also be used later when actual dialog and interactions are in place, so it was something potentially reusable.
 
 I started with the idea that the speech bubbles would be managed with a global object that wrote them to a separate canvas element. This approach ended up not being very usable and i instead just ended up painting all the bubbles onto the same canvas.
