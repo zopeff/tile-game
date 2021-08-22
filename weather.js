@@ -112,7 +112,9 @@ export class WeatherController{
     toggleRain(ctx){
         console.log("looks rainy")
         this.on = !this.on;
-        if(ctx){
+        this.drops = []
+
+        if(this.on){
             this.initDrops(ctx)
         }
     }
