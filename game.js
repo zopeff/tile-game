@@ -131,7 +131,7 @@ export class Game{
         this.speech.removeAll();
         let val = window.localStorage.getItem("game")
         let data = JSON.parse(val)
-        this.#world.load(this.ctx, data.world)
+        this.#world.loadFromSave(this.ctx, data)
     }
         
 }

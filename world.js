@@ -11,6 +11,7 @@ export class World{
     active = null;
     loaded = false;
     savedPositions = [];
+    mapState = {}
 
     isCenter(playerPos){
         console.log(playerPos[0], playerPos[1], 
@@ -30,20 +31,44 @@ export class World{
         }
     }
 
+    getSaveData(){
+        return {currentMap:this.#map.name,player:this.player,maps:this.mapState};
+    }
     toJSON(){
-        let val = {world:{map:this.#map.name,player:this.player,entities:this.entities}}
-        return JSON.stringify(val)
+        this.saveMapState()
+        return JSON.stringify(this.getSaveData())
     }
 
-    async load(ctx, data){
-        await this.loadMap(ctx, data.map)
+    saveMapState(){
+        this.mapState[this.#map.name] = {name: this.#map.name, entities:this.entities.map(e=>e.getSaveData())}
+    }
 
+    getMapState(mapName){
+        return this.mapState[mapName];
+    }
+
+    restoreMapState(ctx, mapName){
+        let state = this.mapState[mapName]
+        if( !state ){
+            return false;
+        }
         //reset everything the map might have loaded
         this.reset()
 
-        if( data.entities ){
-            this.addEntities(data.entities)
+        if( state.entities ){
+            this.addEntities(state.entities)
         }
+
+        return true;
+    }
+
+    async loadFromSave(ctx, data){
+        this.#map = null
+
+        this.mapState = data.maps
+
+        await this.loadMap(ctx, data.currentMap )
+        this.restoreMapState(ctx, data.currentMap)
 
         this.player.load(data.player)
         this.centerMapOnPlayer(ctx)
@@ -113,41 +138,48 @@ export class World{
     }
 
     async loadMap(ctx,mapToLoad){
+        // is there a map already loaded?
+        if( this.#map ){
+            // save the current map state
+            this.saveMapState();
+        }
+
         let mapConfig = await this.findMap(mapToLoad)
         this.#map = new Map(mapConfig);
         await this.#map.load(ctx);
         this.player.position = mapConfig.player.position
-        
         window.game.speech.removeAll()
-        // setup all the NPCs
-        this.removeAllEntities();
-        if( mapConfig.entities ){
-            mapConfig.entities.forEach(npc=>{
-                let i = this.#npcList.find(n=>npc.id===n.id)
-                if( i ){
-                    i.name = npc.name
-                    this.addNPC(i,npc.position[0],npc.position[1])
-                }
-            })
+
+        if(!this.restoreMapState(ctx,mapToLoad)){
+            // setup all the NPCs based on the default config
+            this.removeAllEntities();
+            if( mapConfig.entities ){
+                mapConfig.entities.forEach(npc=>{
+                    let i = this.#npcList.find(n=>npc.id===n.id)
+                    if( i ){
+                        i.name = npc.name
+                        this.addNPC(i,npc.position[0],npc.position[1])
+                    }
+                })
+            }
+
+            // position the map on the screen
+            let dx = clamp(Math.ceil(ctx.canvas.width / 48),0,this.#map.width)
+            let dy = clamp(Math.ceil(ctx.canvas.height / 48),0,this.#map.height)
+
+            this.center = [Math.ceil(dx/2),Math.ceil(dy/2)]
+
+            if( dx == this.#map.width || dy == this.#map.height){
+                return
+            }
+
+            if( this.player.position[0] != this.center[0] ){
+                this.map.x = clamp(this.player.position[0]-this.center[0],0,this.#map.width-dx)
+            }
+            if( this.player.position[1] != this.center[1] ){
+                this.map.y = clamp((this.player.position[1]-this.center[1]),0,this.#map.height-dy)
+            }
         }
-
-        // position the map on the screen
-        let dx = clamp(Math.ceil(ctx.canvas.width / 48),0,this.#map.width)
-        let dy = clamp(Math.ceil(ctx.canvas.height / 48),0,this.#map.height)
-
-        this.center = [Math.ceil(dx/2),Math.ceil(dy/2)]
-
-        if( dx == this.#map.width || dy == this.#map.height){
-            return
-        }
-
-        if( this.player.position[0] != this.center[0] ){
-            this.map.x = clamp(this.player.position[0]-this.center[0],0,this.#map.width-dx)
-        }
-        if( this.player.position[1] != this.center[1] ){
-            this.map.y = clamp((this.player.position[1]-this.center[1]),0,this.#map.height-dy)
-        }
-
     }
 
     addObject(o){
@@ -194,6 +226,9 @@ export class World{
     }
 
     render (ctx, timestamp){
+        if( !this.#map ){
+            return;
+        }
         if (this.animate_start === undefined){
             this.animate_start = timestamp;
         }

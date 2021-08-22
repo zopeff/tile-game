@@ -21,8 +21,11 @@ export class NPC extends Sprite{
 
     }
 
+    getSaveData(){
+        return {name:this.name,id:this.id,position:[this.x,this.y],stateData:this.stateHandler}
+    }
     toJSON(){
-        let val = {name:this.name,id:this.id,position:[this.x,this.y],stateData:this.stateHandler}
+        let val = this.getSaveData()
         return val
     }
 
