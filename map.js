@@ -10,25 +10,20 @@ export class Map{
         loaded:false
     }
 
-    constructor(map){
-        this.x = map.origin[0];
-        this.y = map.origin[1];    
-        this.#name = map.name;
-        this.#mapPath = map.mapPath
-        this.#tilesetPath = map.tilesPath
-        this.#imgPath = map.imgPath
-        this.spawn = map.spawn;
-        this.origin = map.origin
+    constructor(mapConfig){
+        this.x = mapConfig.origin[0];
+        this.y = mapConfig.origin[1];    
+        this.mapConfig = mapConfig
     }
 
-    get name(){return this.#name};
+    get name(){return this.mapConfig.name};
 
     async load(ctx){
         this.#tiles = new Image()
-        this.#tiles.src = this.#imgPath
-        let mapData = await fetchRemoteResource(this.#mapPath);
-        this.map.tileSet = await fetchRemoteResource(this.#tilesetPath);
-        let module = await import('./data/maps/events/'+this.name+'.events.js');
+        this.#tiles.src = this.mapConfig.imgPath
+        let mapData = await fetchRemoteResource(this.mapConfig.mapPath);
+        this.map.tileSet = await fetchRemoteResource(this.mapConfig.tilesPath);
+        let module = await import('./data/maps/events/'+this.mapConfig.name+'.events.js');
         this.events = new module.default
 
         this.map.data = mapData.layers
@@ -39,6 +34,13 @@ export class Map{
         let self = this;
         this.#tiles.onload = function(){
             self.draw(ctx) 
+        }
+
+        window.game.clearWeather()
+        if( this.mapConfig.environment ){
+            if( 'night' === this.mapConfig.environment[0] ){
+                window.game.toggleNight()
+            }
         }
     }
 
