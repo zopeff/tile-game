@@ -1,13 +1,13 @@
 Debugging
-    load any map
+    [x] load any map
     find any NPC
     trigger NPC state
     teleport
     spawn item
-    trigger environment state
+    [x] trigger environment state
 
 Optimizations
-    apply default properties to all
+    apply default properties to all tiles in tileset
     limit screen width for large monitors?
     Resource Pool
         images
@@ -41,6 +41,7 @@ player
     health/damage
     inventory / pickups
     death
+
 npc
     walk
         [x] random
@@ -49,20 +50,24 @@ npc
         goal
     [x] speak
     conversation/interact
+
 enemy
     [x] kill/remove
     types
     walk
     attack
     die
+
 sound
     bg music
     effects
+
 story
     quest
     cinematics
+
 weather
-    night 
+    [x] night 
     fog 
     rain
         [x] on / off
@@ -86,6 +91,8 @@ screens
     health
     score
     transitions
+    inventory
+    quest log
 
 items/inventory
 
@@ -109,13 +116,13 @@ _Real_ Tiles
 Questing System with FSMs
 
 --------
-Demo quest
-talk to npc
-npc tells you 
-    (a) something bad lives in the cave and to kill it
-    (a) something bad lives in the cave stole a rare item
-go to cave
-(kill monster)
-retrieve rare item
-return to npc
-win
+[x] Demo quest
+        talk to npc
+        npc tells you 
+            (a) something bad lives in the cave and to kill it
+            (a) something bad lives in the cave stole a rare item
+        go to cave
+        (kill monster)
+        retrieve rare item
+        return to npc
+        win
