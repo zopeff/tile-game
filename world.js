@@ -40,7 +40,7 @@ export class World{
     }
 
     saveMapState(){
-        this.mapState[this.#map.name] = {name: this.#map.name, entities:this.entities.map(e=>e.getSaveData())}
+        this.mapState[this.#map.name] = {name: this.#map.name, weather:window.game.weather.current, entities:this.entities.map(e=>e.getSaveData())}
     }
 
     getMapState(mapName){
@@ -57,6 +57,10 @@ export class World{
 
         if( state.entities ){
             this.addEntities(state.entities)
+        }
+
+        if( state.weather ){
+            window.game.weather.restore(state.weather)
         }
 
         return true;
@@ -105,15 +109,6 @@ export class World{
         this.centerMapOnPlayer(ctx)
     }
 
-    centerMapOnPlayer(ctx){
-        // tiles across
-        let w = Math.ceil(ctx.canvas.width/48)
-        let h = Math.ceil(ctx.canvas.height/48)
-
-        this.map.x = Math.clamp(this.player.position[0] - Math.ceil(w/2), 0, w)
-        this.map.y = Math.clamp(this.player.position[1] - Math.ceil(h/2), 0, h)
-    }
-
     async findMap(name){
         if( !this.#mapList ){
             this.#mapList = await fetchRemoteResource("./data/maps/maps.json")
@@ -137,6 +132,24 @@ export class World{
         })
     }
 
+    centerMapOnPlayer(ctx){
+        let dx = Math.clamp(Math.ceil(ctx.canvas.width / 48),0,this.#map.width)
+        let dy = Math.clamp(Math.ceil(ctx.canvas.height / 48),0,this.#map.height)
+
+        this.center = [Math.ceil(dx/2),Math.ceil(dy/2)]
+
+        if( dx == this.#map.width || dy == this.#map.height){
+            return
+        }
+
+        if( this.player.position[0] != this.center[0] ){
+            this.map.x = Math.clamp(this.player.position[0]-this.center[0],0,this.#map.width-dx)
+        }
+        if( this.player.position[1] != this.center[1] ){
+            this.map.y = Math.clamp((this.player.position[1]-this.center[1]),0,this.#map.height-dy)
+        }
+    }
+
     async loadMap(ctx,mapToLoad){
         // is there a map already loaded?
         if( this.#map ){
@@ -150,35 +163,11 @@ export class World{
         this.player.position = mapConfig.player.position
         window.game.speech.removeAll()
 
-        if(!this.restoreMapState(ctx,mapToLoad)){
+        if(!this.restoreMapState(ctx,mapConfig.name)){
             // setup all the NPCs based on the default config
             this.removeAllEntities();
-            if( mapConfig.entities ){
-                mapConfig.entities.forEach(npc=>{
-                    let i = this.#npcList.find(n=>npc.id===n.id)
-                    if( i ){
-                        i.name = npc.name
-                        this.addNPC(i,npc.position[0],npc.position[1])
-                    }
-                })
-            }
-
-            // position the map on the screen
-            let dx = Math.clamp(Math.ceil(ctx.canvas.width / 48),0,this.#map.width)
-            let dy = Math.clamp(Math.ceil(ctx.canvas.height / 48),0,this.#map.height)
-
-            this.center = [Math.ceil(dx/2),Math.ceil(dy/2)]
-
-            if( dx == this.#map.width || dy == this.#map.height){
-                return
-            }
-
-            if( this.player.position[0] != this.center[0] ){
-                this.map.x = Math.clamp(this.player.position[0]-this.center[0],0,this.#map.width-dx)
-            }
-            if( this.player.position[1] != this.center[1] ){
-                this.map.y = Math.clamp((this.player.position[1]-this.center[1]),0,this.#map.height-dy)
-            }
+            this.addEntities(mapConfig.entities)
+            this.centerMapOnPlayer(ctx)
         }
     }
 
