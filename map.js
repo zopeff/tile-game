@@ -1,4 +1,4 @@
-import {clamp,fetchRemoteResource} from './util.js';
+import {fetchRemoteResource} from './util.js';
 
 export class Map{
     #tiles; // 40x36
@@ -43,8 +43,8 @@ export class Map{
     }
 
     scrollMap(ctx,x,y){
-        let dx = clamp(Math.ceil(ctx.canvas.width / 48),0,this.width)
-        let dy = clamp(Math.ceil(ctx.canvas.height / 48),0,this.height)
+        let dx = Math.clamp(Math.ceil(ctx.canvas.width / 48),0,this.width)
+        let dy = Math.clamp(Math.ceil(ctx.canvas.height / 48),0,this.height)
         if( this.x+x>this.width-dx ){
             return false;
         }
@@ -55,8 +55,8 @@ export class Map{
         //    return false;
        // }
 
-        this.x = clamp(this.x+x,0,this.width)
-        this.y = clamp(this.y+y,0,this.height)
+        this.x = Math.clamp(this.x+x,0,this.width)
+        this.y = Math.clamp(this.y+y,0,this.height)
         return true
     }
 
@@ -136,8 +136,8 @@ export class Map{
 
         this.map.data.forEach(layer => {
             if(layer.data ){
-                let dx = clamp(Math.ceil(ctx.canvas.width / 48), 0, layer.width)
-                let dy = clamp(Math.ceil(ctx.canvas.height / 48), 0, layer.height)
+                let dx = Math.clamp(Math.ceil(ctx.canvas.width / 48), 0, layer.width)
+                let dy = Math.clamp(Math.ceil(ctx.canvas.height / 48), 0, layer.height)
                 let sy = 0
                 for(let y = this.y; y < this.y+dy; y++,sy+=48){
                     let sx = 0

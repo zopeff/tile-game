@@ -1,7 +1,7 @@
 import { Game } from './game.js';
 import {Map} from './map.js';
 import {NPC} from './npc.js';
-import {clamp,fetchRemoteResource} from './util.js';
+import {fetchRemoteResource} from './util.js';
 
 export class World{
     entities = [];
@@ -110,8 +110,8 @@ export class World{
         let w = Math.ceil(ctx.canvas.width/48)
         let h = Math.ceil(ctx.canvas.height/48)
 
-        this.map.x = clamp(this.player.position[0] - Math.ceil(w/2), 0, w)
-        this.map.y = clamp(this.player.position[1] - Math.ceil(h/2), 0, h)
+        this.map.x = Math.clamp(this.player.position[0] - Math.ceil(w/2), 0, w)
+        this.map.y = Math.clamp(this.player.position[1] - Math.ceil(h/2), 0, h)
     }
 
     async findMap(name){
@@ -164,8 +164,8 @@ export class World{
             }
 
             // position the map on the screen
-            let dx = clamp(Math.ceil(ctx.canvas.width / 48),0,this.#map.width)
-            let dy = clamp(Math.ceil(ctx.canvas.height / 48),0,this.#map.height)
+            let dx = Math.clamp(Math.ceil(ctx.canvas.width / 48),0,this.#map.width)
+            let dy = Math.clamp(Math.ceil(ctx.canvas.height / 48),0,this.#map.height)
 
             this.center = [Math.ceil(dx/2),Math.ceil(dy/2)]
 
@@ -174,10 +174,10 @@ export class World{
             }
 
             if( this.player.position[0] != this.center[0] ){
-                this.map.x = clamp(this.player.position[0]-this.center[0],0,this.#map.width-dx)
+                this.map.x = Math.clamp(this.player.position[0]-this.center[0],0,this.#map.width-dx)
             }
             if( this.player.position[1] != this.center[1] ){
-                this.map.y = clamp((this.player.position[1]-this.center[1]),0,this.#map.height-dy)
+                this.map.y = Math.clamp((this.player.position[1]-this.center[1]),0,this.#map.height-dy)
             }
         }
     }
