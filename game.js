@@ -1,12 +1,11 @@
 import {World} from './world.js';
 import {Sprite} from './thing.js';
 import {SpeechBubble} from './speech.js';
-import {WeatherController} from './weather.js';
+import {WeatherController} from './weather/weather.js';
 
 export class Game{
     #world;
-    #canvas;
-    #ctx;
+
     // debug helpers
     dbg_loadMap(name){
         this.world.loadMap(this.ctx,name)
@@ -36,7 +35,7 @@ export class Game{
         this.#world.addPlayer( new Sprite("link", 0, 0, 'img/link_all.png'))
         await this.#world.loadMap(this.ctx )
         
-        //this.weather.toggleRain(this.ctx);
+        this.toggleRain()
         
         window.requestAnimationFrame(function(timestamp){self.render(timestamp)});
     }
@@ -127,6 +126,18 @@ export class Game{
         //this.#world.select(e.offsetX,e.offsetY)
     };
 
+    clearWeather(){
+        this.weather.clear();
+    }
+    toggleRain(){
+        this.weather.toggleRain(this.ctx);
+    }
+    toggleNight(){
+        this.weather.toggleNight(this.ctx);
+    }
+    get player(){
+        return this.world.player
+    }
 
     save(){
         let val = this.#world.toJSON();
