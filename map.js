@@ -28,7 +28,7 @@ export class Map{
         this.#tiles.src = this.#imgPath
         let mapData = await fetchRemoteResource(this.#mapPath);
         this.map.tileSet = await fetchRemoteResource(this.#tilesetPath);
-        let module = await import('./data/'+this.name+'.events.js');
+        let module = await import('./data/maps/events/'+this.name+'.events.js');
         this.events = new module.default
 
         this.map.data = mapData.layers

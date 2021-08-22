@@ -36,7 +36,7 @@ export class Game{
         this.#world.addPlayer( new Sprite("link", 0, 0, 'img/link_all.png'))
         await this.#world.loadMap(this.ctx )
         
-        this.weather.toggleRain(this.ctx);
+        //this.weather.toggleRain(this.ctx);
         
         window.requestAnimationFrame(function(timestamp){self.render(timestamp)});
     }

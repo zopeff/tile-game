@@ -116,7 +116,7 @@ export class World{
 
     async findMap(name){
         if( !this.#mapList ){
-            this.#mapList = await fetchRemoteResource("./data/maps.json")
+            this.#mapList = await fetchRemoteResource("./data/maps/maps.json")
         }
         if( !name ){
             return this.#mapList[0]
