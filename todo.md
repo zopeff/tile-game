@@ -64,10 +64,13 @@ story
 weather
     night 
     fog 
-    [x] rain
+    rain
+        [x] on / off
+        rain puddles/drop splash
+        ease in / out
 
 environment/items
-    dark cave + lantern item
+    [x] dark cave + lantern item
     water + boat
     cliff + rope/ladder
     castle + disguise
