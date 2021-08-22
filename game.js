@@ -1,6 +1,7 @@
 import {World} from './world.js';
 import {Sprite} from './thing.js';
 import {SpeechBubble} from './speech.js';
+import {WeatherController} from './weather.js';
 
 export class Game{
     #world;
@@ -22,6 +23,7 @@ export class Game{
         this.resizeCanvas();
         this.canvas.focus();
         this.speech = new SpeechBubble()
+        this.weather = new WeatherController();
 
         this.#world = new World(this.ctx);
         await this.#world.init();
@@ -34,6 +36,8 @@ export class Game{
         this.#world.addPlayer( new Sprite("link", 0, 0, 'img/link_all.png'))
         await this.#world.loadMap(this.ctx )
         
+        this.weather.toggleRain(this.ctx);
+        
         window.requestAnimationFrame(function(timestamp){self.render(timestamp)});
     }
 
@@ -44,7 +48,9 @@ export class Game{
         let self = this;
 
         this.#world.render(this.ctx, timestamp)
+
         this.speech.draw(this.ctx, this.world)
+        this.weather.draw(this.ctx,timestamp)
 
         window.requestAnimationFrame(function(timestamp){self.render(timestamp)});
     }

@@ -64,7 +64,7 @@ story
 weather
     night 
     fog 
-    rain
+    [x] rain
 
 environment/items
     dark cave + lantern item
