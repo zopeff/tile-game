@@ -6,8 +6,11 @@
         "imgPath":"./img/Overworld.png",
         "origin":[0,0],
         "player":{
-            "position":[12,7]
+            "position":[16,6]
         },
+        "environment":[
+            "rain"
+        ],
         "entities":[
             {
                 "name":"Foul Ole Ron",

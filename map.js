@@ -38,9 +38,7 @@ export class Map{
 
         window.game.clearWeather()
         if( this.mapConfig.environment ){
-            if( 'night' === this.mapConfig.environment[0] ){
-                window.game.toggleNight()
-            }
+            window.game.setWeather(this.mapConfig.environment[0])
         }
     }
 

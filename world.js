@@ -105,7 +105,9 @@ export class World{
 
     restorePosition(ctx){
         let old = this.savedPositions.pop()
-        this.player.position = old;
+        if(old){
+            this.player.position = old;
+        }
         this.centerMapOnPlayer(ctx)
     }
 

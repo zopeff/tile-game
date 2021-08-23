@@ -33,7 +33,8 @@ export class Game{
         this.canvas.addEventListener('mouseup', (e)=>self.mouseUp(e) );
 
         this.#world.addPlayer( new Player())
-        await this.#world.loadMap(this.ctx )
+        await this.#world.loadMap(this.ctx, 'house')
+        this.player.position = [6,2]
         
         //this.toggleRain()
         
@@ -135,6 +136,16 @@ export class Game{
     toggleNight(){
         this.weather.toggleNight(this.ctx);
     }
+    setWeather(weather){
+        this.clearWeather()
+        if('night'===weather){
+            this.toggleNight();
+        }
+        if('rain'===weather){
+            this.toggleRain();
+        }
+    }
+
     get player(){
         return this.world.player
     }
