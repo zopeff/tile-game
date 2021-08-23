@@ -1,6 +1,10 @@
 const MIN_WIDTH = 4
 const MIN_HEIGHT = 3
 const MAX_TEXT_WIDTH = 450
+
+const FONT = '24px Yanone Kaffeesatz'
+//const FONT = '24px Zelda'
+
 export class SpeechBubble{
     bubbles;
     
@@ -77,7 +81,7 @@ export class SpeechBubble{
             let mx = msg.x-(world.map.x*48)
             let my = msg.y-(world.map.y*48)
 
-            ctx.font = '24px Zelda';
+            ctx.font = FONT;
             let metrics
             // split the message on spaces
             let m = msg.message.split(' ');
@@ -121,7 +125,7 @@ export class SpeechBubble{
             }
             
             // now the message
-            ctx.font = '24px Zelda';
+            ctx.font = FONT;
             // little hack to help center the text
             if( lines.length === 1){
                 my += 55 
