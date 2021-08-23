@@ -1,4 +1,6 @@
 
+const QUEST_FOLDER = './'
+
 export class Quest{
 
     constructor(id){
@@ -40,7 +42,7 @@ export class QuestController{
     }
     
     async loadQuest(quest){
-        let module = await import('/data/quests/'+quest+'.js')
+        let module = await import(QUEST_FOLDER+quest+'.js')
         return new module.default(quest)
     }
 
