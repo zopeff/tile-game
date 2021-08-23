@@ -33,6 +33,8 @@ interact
     door
     button
     push/pull
+    sign - read
+    grass - sword
 
 player
     [x] move
