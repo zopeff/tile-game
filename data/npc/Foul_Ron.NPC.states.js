@@ -3,8 +3,13 @@ export default class FoulRon_StateHandler extends NPCStateHandler{
     constructor(parent, states){
         super(parent, states)
     }
+
+    async loadDialogHandler(){
+        let module = await import('/data/npc/'+this.id+'.dialog.js')
+        this.dialogHandler = new module.default(this.parent)
+    }
     
-    changeState(to, data){
+    async changeState(to, data){
         this.updating_state = true;
         // can we change from and to?
         if( !this.can(to) ){
@@ -12,11 +17,22 @@ export default class FoulRon_StateHandler extends NPCStateHandler{
         }
         if( 'talk' === to ){
             this.state = to
-            console.log(this.parent.name,"SPEAK",this.parent.x, this.parent.y, 'Hello!')
-
             if( !this.data.hasBeenVisited ){
-                this.curr_message = window.game.speech.addMessage(this.parent.x,this.parent.y,"Hello!");
-                this.data.hasBeenVisited = true;
+                if( this.state.dialog ){
+                    if(!this.dialogHandler){
+                        await this.loadDialogHandler()
+                    }
+                    if( !this.dialogHandler.isDone() ){
+                        window.game.speech.removeMessage(this.curr_message)
+                        this.curr_message = this.dialogHandler.nextMsg();
+                    }
+                    else{
+                        this.data.hasBeenVisited = true;
+                    }
+                }
+                else{
+                    this.curr_message = window.game.speech.addMessage(this.parent.x,this.parent.y,"Hello!");
+                }
             }
             else if( !this.data.quest_done ){
                 if(window.game.world.player.hasInventory('Foul Box')){

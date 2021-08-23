@@ -86,6 +86,7 @@ weapons
     magic wand
 
 screens
+    alert popups
     title
     loading screen
     health

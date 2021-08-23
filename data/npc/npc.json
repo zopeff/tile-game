@@ -57,7 +57,8 @@
             {
                 "id":"talk",
                 "to":["*"],
-                "time": 2500
+                "time": 2500,
+                "dialog":"Foul_Ron.dialog"
             },
             {
                 "id":"speak",

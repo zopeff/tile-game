@@ -18,7 +18,6 @@ export class NPC extends Sprite{
             this.loaded = true;
             this.stateHandler = new module.default(this, options.states)
         })
-
     }
 
     getSaveData(){
