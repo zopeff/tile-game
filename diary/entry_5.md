@@ -1,0 +1,5 @@
+8/23/21
+Chit chat
+Implemented a basic dialog system and revamped the quest system to be a little more generic. This took a lot longer than I thought, but I'm much happier with the way everything is tied together. Though... I have to admit I'm pretty surprised at how complicated everything has become. On more than one occasion I had to search around for where things were happening. Also, with all this complexity and the fact that I usually end up refactoring the existing code quite a bit when adding something new, I really wish I had some tests. Right now, I have a handful of basic sanity checks I do when I change things, but I can see that getting very cumbersome once we have a more complex story with lots of quests or other interactions.
+
+Tests do not sound very exciting... maybe I should start working on some screen transitions or UI for quests (like a quest log) or some other ways of alerting the player to things that happen like when you recieve a new item or quest.

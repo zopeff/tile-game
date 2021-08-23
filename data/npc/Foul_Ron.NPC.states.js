@@ -16,6 +16,7 @@ export default class FoulRon_StateHandler extends NPCStateHandler{
             return false;
         }
         if( 'talk' === to ){
+            window.game.speech.removeAll()
             this.state = to
             let quest = window.game.player.quests.has('Foul_Ron_0')
             if(this.state.dialog && !this.dialogHandler){
