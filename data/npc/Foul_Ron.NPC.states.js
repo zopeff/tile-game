@@ -16,9 +16,11 @@ export default class FoulRon_StateHandler extends NPCStateHandler{
             return false;
         }
         if( 'talk' === to ){
+            // this is almost to the point where this could all be part of the base
+            // class and driven totally through the JSON config file
             window.game.speech.removeAll()
             this.state = to
-            let quest = window.game.player.quests.has('Foul_Ron_0')
+            let quest = window.game.player.quests.has('Foul_Ron_0') // need to move this to config
             if(this.state.dialog && !this.dialogHandler){
                 await this.loadDialogHandler()
                 this.dialogHandler.setContext(quest)
@@ -40,10 +42,12 @@ export default class FoulRon_StateHandler extends NPCStateHandler{
                     }
                 }
                 else{
+                    // these can go to dialog?
                     this.curr_message = window.game.speech.addMessage(this.parent.x,this.parent.y,"Back already? Where is my box?");
                 }
             }
             else{
+                // these can go to dialog?
                 this.curr_message = window.game.speech.addMessage(this.parent.x,this.parent.y,"Many thanks friend!");                
             }
         }
