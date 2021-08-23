@@ -4,11 +4,6 @@ export default class FoulRon_StateHandler extends NPCStateHandler{
         super(parent, states)
     }
 
-    async loadDialogHandler(){
-        let module = await import('/data/npc/'+this.id+'.dialog.js')
-        this.dialogHandler = new module.default(this.parent)
-    }
-    
     async changeState(to, data){
         this.updating_state = true;
         // can we change from and to?

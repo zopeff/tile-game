@@ -4,6 +4,11 @@ export class NPCStateHandler extends StateHandler{
         super(parent, states)
         this.curr_message = 0
     }
+
+    async loadDialogHandler(){
+        let module = await import('./'+this.id+'.dialog.js')
+        this.dialogHandler = new module.default(this.parent)
+    }
     
     randomMessage(){
         return this.state.data[Math.floor(Math.random() * this.state.data.length)]
