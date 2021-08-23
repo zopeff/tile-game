@@ -17,7 +17,7 @@ Optimizations
 Maps
     [x] load map
     [x] enter/exit map areas
-    save world state between transitions
+    [x] save world state between transitions
     tiles from multiple tilesets
     map events
 
@@ -43,13 +43,19 @@ player
     death
 
 npc
+    spawn based on condition
+        quest
+        map 
     walk
         [x] random
         restricted to area
         path
         goal
     [x] speak
-    conversation/interact
+    [x] conversation/interact
+    trigger behaviour
+        quest
+        map
 
 enemy
     [x] kill/remove
@@ -63,7 +69,7 @@ sound
     effects
 
 story
-    quest
+    [x] quest
     cinematics
 
 weather
@@ -86,7 +92,7 @@ weapons
     magic wand
 
 screens
-    alert popups
+    alert/toast popups
     title
     loading screen
     health
@@ -94,16 +100,19 @@ screens
     transitions
     inventory
     quest log
+    dialog indicator for more text
 
 items/inventory
 
 game state
-    entity state
+    [x] entity state
     save
-        create local object
+        [x] create local object
         hash + checksum
         send to server
     load
+        [x] load local object
+        anti-tamper
 
 multiplayer?
 
