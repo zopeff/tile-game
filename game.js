@@ -1,5 +1,5 @@
 import {World} from './world.js';
-import {Sprite} from './thing.js';
+import {Player} from './player.js';
 import {SpeechBubble} from './speech.js';
 import {WeatherController} from './weather/weather.js';
 
@@ -32,7 +32,7 @@ export class Game{
         this.canvas.addEventListener('keydown', (e)=>self.keyDown(e),);
         this.canvas.addEventListener('mouseup', (e)=>self.mouseUp(e) );
 
-        this.#world.addPlayer( new Sprite("link", 0, 0, 'img/link_all.png'))
+        this.#world.addPlayer( new Player())
         await this.#world.loadMap(this.ctx )
         
         //this.toggleRain()
@@ -149,6 +149,17 @@ export class Game{
         let val = window.localStorage.getItem("game")
         let data = JSON.parse(val)
         this.#world.loadFromSave(this.ctx, data)
+    }
+
+    triggerEvent(event){
+        switch(event.type){
+            case 'quest':
+                this.player.quests.handleQuestEvent(event)
+                break;
+            case 'alert':
+                alert(event.text)
+                break;
+        }
     }
         
 }

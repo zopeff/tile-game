@@ -17,28 +17,26 @@ export default class FoulRon_StateHandler extends NPCStateHandler{
         }
         if( 'talk' === to ){
             this.state = to
-            if( !this.data.hasBeenVisited ){
-                if( this.state.dialog ){
-                    if(!this.dialogHandler){
-                        await this.loadDialogHandler()
-                    }
-                    if( !this.dialogHandler.isDone() ){
-                        window.game.speech.removeMessage(this.curr_message)
-                        this.curr_message = this.dialogHandler.nextMsg();
-                    }
-                    else{
-                        this.data.hasBeenVisited = true;
-                    }
-                }
-                else{
-                    this.curr_message = window.game.speech.addMessage(this.parent.x,this.parent.y,"Hello!");
+            let quest = window.game.player.quests.has('Foul_Ron_0')
+            if(this.state.dialog && !this.dialogHandler){
+                await this.loadDialogHandler()
+                this.dialogHandler.setContext(quest)
+            }
+
+            if( !quest ){
+                if( !this.dialogHandler.isDone() ){
+                    this.dialogHandler.nextMsg();
                 }
             }
-            else if( !this.data.quest_done ){
-                if(window.game.world.player.hasInventory('Foul Box')){
-                    this.curr_message = window.game.speech.addMessage(this.parent.x,this.parent.y,"You found it!");
-                    window.game.world.player.removeInventory('Foul Box')
-                    this.data.quest_done = true;
+            else if( !quest.completed ){
+                this.dialogHandler.setContext(quest)
+                if(quest.canComplete()){
+                    if( !this.dialogHandler.isDone() ){
+                        this.dialogHandler.nextMsg();
+                    }
+                    else{
+                        quest.setComplete()
+                    }
                 }
                 else{
                     this.curr_message = window.game.speech.addMessage(this.parent.x,this.parent.y,"Back already? Where is my box?");

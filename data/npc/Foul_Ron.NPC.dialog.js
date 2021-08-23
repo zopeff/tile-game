@@ -1,4 +1,4 @@
-const DIALOG = [
+const QUEST_DIALOG = [
     {
         who:'player',
         msg: "Hey, what's wrong?!"
@@ -36,14 +36,51 @@ const DIALOG = [
         msg:"I didnt, but I've heard something scarey lives in the cave behind the castle..." 
     },
     {
-        trigger:{type:'quest',id:'quest_0'}
+        trigger:{type:'quest',id:'Foul_Ron_0'}
+    }
+]
+
+const THANKS_DIALOG = [
+    {
+        who:'npc',
+        msg:"You found it! THank you soooo much!"
+        // maybe change the NPC state to cause it to run around happy!
+    },
+    {
+        who:'player',
+        msg:"You are very welcome!" 
+    },
+    {
+        trigger:{type:'alert',text:'You completed the quest!'}
+    }
+]
+
+const IDLE_DIALOG = [
+    {
+        who:'npc',
+        msg:"Many Thanks Friend!"
     }
 ]
 
 export default class FoulRon_DialogHandler{
     constructor(parent){
         this.parent = parent;
-        this.curr = 0
+        this.setContext()
+    }
+
+    setContext(quest){
+        let newDialog
+        if( !quest ){
+            newDialog = QUEST_DIALOG;
+        }
+        else if( quest.canComplete() ){
+            newDialog = THANKS_DIALOG;
+        }
+
+        if( newDialog != this.currDialog ){
+            this.currDialog = newDialog
+            this.curr = 0
+        }
     }
 
     next(){
@@ -51,21 +88,24 @@ export default class FoulRon_DialogHandler{
     }
 
     isDone(){
-        return this.curr === DIALOG.length
+        return this.curr === this.currDialog.length
     }
 
     nextMsg(){
-        if( !DIALOG[this.curr].trigger ){
+        window.game.speech.removeMessage(this.curr_message)
+        if( !this.currDialog[this.curr].trigger ){
             let x = this.parent.x
             let y = this.parent.y
-            if('player'===DIALOG[this.curr].who){
+            if('player'===this.currDialog[this.curr].who){
                 x = window.game.player.position[0]
                 y = window.game.player.position[1]
             }
-            return window.game.speech.addMessage(x,y,DIALOG[this.curr++].msg);
+            this.curr_message = window.game.speech.addMessage(x,y,this.currDialog[this.curr++].msg);
+            return this.curr_message;
         }
         else{
-            console.log(DIALOG[this.curr])
+            console.log(this.currDialog[this.curr])
+            window.game.triggerEvent(this.currDialog[this.curr].trigger)
             this.next()
             return -1;
         }

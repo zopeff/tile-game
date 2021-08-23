@@ -1,4 +1,4 @@
-import {Sprite} from "./thing.js"
+import {Sprite} from "./sprite.js"
 
 export class NPC extends Sprite{
     constructor(options,x,y){

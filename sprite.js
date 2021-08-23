@@ -83,18 +83,8 @@ export class Sprite extends Thing{
         this.max_frame = 0;
         this.animate_finished = null;
 
-        this.inventory=[]
     }
 
-    toJSON(){
-        let val = {id:'player',position:[this.position[0],this.position[1]],inventory:this.inventory}
-        return val;
-    }
-
-    load(data){
-        this.position = data.position
-        this.inventory = data.inventory
-    }
 
     get position(){ return [this.x, this.y, this.width*this.scale_x, this.height*this.scale_y, this.facing]}
     set position(pos){this.x = pos[0]; this.y=pos[1];}
@@ -111,61 +101,10 @@ export class Sprite extends Thing{
         }
     }
 
-    give(thing){
-        this.addInventory(thing)
-    }
-    addInventory(inv){
-        this.inventory.push(inv)
-    }
-    hasInventory(itemName){
-        return this.inventory.find(item=>item.name===itemName)
-    }
-    removeInventory(itemName){
-        this.inventory.splice(this.inventory.findIndex(item=>item.name===itemName),1)
-    }
-
-    interact(ctx, world){
-        // am I facing something to interact with?
-        let facing = this.facingPosition;
-        let o = world.canInteract(facing);
-        if(o){
-            console.log("Inteact with: " + o.name)
-            // trigger 'interact' state?
-            o.stateHandler.changeState('interact', {position:this.position})
-        }
-        
-    }
-
-    action(ctx){
-        this.playAnimation(ctx, 1)
-    }
-    
     fire(ctx, world, finished){
         if( this.animate ){
             return; // only one at a time
         }
-        this.column = 6
-        this.frame = 0;
-        this.max_frame = 4;
-        this.animate = true
-        this.animate_move = false;
-        this.animate_finished = function(ctx,world){
-            let x = world.player.position[0]
-            let y = world.player.position[1]
-            switch(world.player.position[4]){
-                case 'up':y--;break;
-                case 'down':y++;break;
-                case 'right':x++;break;
-                case 'left':x--;break;
-            }
-            if( world.map.canBreak(x,y)){
-                world.map.updateMap(x,y,0)
-            }
-            let h = world.find(x,y)
-            if( h ){
-                world.remove(h)
-            }
-        };
     }
 
     hit(x,y){

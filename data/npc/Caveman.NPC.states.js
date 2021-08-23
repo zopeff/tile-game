@@ -15,13 +15,13 @@ export default class Caveman_StateHandler extends NPCStateHandler{
         }
         if( 'talk' === to ){
             this.state = to
-            console.log(this.parent.name,"SPEAK",this.parent.x, this.parent.y, 'Hello!')
-
-            if( !this.data.hasBeenVisited ){
+            let quest = window.game.player.quests.has('Foul_Ron_0')
+            if( !quest ){
+                this.curr_message = window.game.speech.addMessage(this.parent.x,this.parent.y,"GRRRRR Go AWAY!");
+            }
+            else if( !quest.complete && !quest.canComplete() ){
                 this.curr_message = window.game.speech.addMessage(this.parent.x,this.parent.y,"Takes the foul box!");
-                this.data.hasBeenVisited = true;
-                this.data.quest_done = true
-                window.game.world.player.give(new Item('Foul Box'))
+                window.game.player.inventory.give(new Item('Foul Box'))
             }
             else{
                 this.curr_message = window.game.speech.addMessage(this.parent.x,this.parent.y,"I gaves it to you already!");                

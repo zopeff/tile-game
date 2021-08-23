@@ -5,6 +5,10 @@ export class NPCStateHandler extends StateHandler{
         this.curr_message = 0
     }
     
+    randomMessage(){
+        return this.state.data[Math.floor(Math.random() * this.state.data.length)]
+    }
+
     changeState(to, data){
         this.updating_state = true;
         // can we change from and to?
@@ -14,7 +18,7 @@ export class NPCStateHandler extends StateHandler{
         }
         this.state = to
         if('speak' === to && this.parent.y > 3){
-            let msg = this.state.data[Math.floor(Math.random() * this.state.data.length)]
+            let msg = this.randomMessage()
             console.log(this.parent.name,"SPEAK",this.parent.x, this.parent.y, '"'+msg+'"')
             this.curr_message = window.game.speech.addMessage(this.parent.x,this.parent.y,msg);
         }        

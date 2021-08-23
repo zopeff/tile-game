@@ -12,7 +12,7 @@ export class Night{
         let endRadius = 90
         let gradient;
 
-        if(window.game.world.player.hasInventory('lantern')){
+        if(window.game.world.player.inventory.has('lantern')){
             startRadius = 40
             endRadius = 250
             gradient = ctx.createRadialGradient((p[0]*48)+22, (p[1]*48)+16, startRadius, (p[0]*48)+22, (p[1]*48), endRadius);
