@@ -2,13 +2,17 @@ import {World} from './world.js';
 import {Player} from './player.js';
 import {SpeechBubble} from './speech.js';
 import {WeatherController} from './weather/weather.js';
-
+import { ToastAlert } from './toast.js';
 export class Game{
     #world;
 
     // debug helpers
     dbg_loadMap(name){
         this.world.loadMap(this.ctx,name)
+    }
+
+    dbg_toast(msg){
+        new ToastAlert(msg)
     }
     //
 
@@ -33,7 +37,7 @@ export class Game{
         this.canvas.addEventListener('mouseup', (e)=>self.mouseUp(e) );
 
         this.#world.addPlayer( new Player())
-        await this.#world.loadMap(this.ctx, 'house')
+        await this.#world.loadMap(this.ctx, 'overworld')
         this.player.position = [6,2]
         
         //this.toggleRain()

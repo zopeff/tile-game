@@ -1,3 +1,4 @@
+import { ToastAlert } from '../../toast.js';
 
 const QUEST_FOLDER = './'
 
@@ -48,7 +49,9 @@ export class QuestController{
 
     async handleQuestEvent(e){
         // add to active quests
-        this.quests.push(await (this.loadQuest(e.id)))
+        let q = await (this.loadQuest(e.id))
+        this.quests.push(q)
+        new ToastAlert("You got a new quest!<br/>"+q.title)
     }
 
     has(questID){

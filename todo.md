@@ -73,6 +73,7 @@ sound
 story
     [x] quest
     cinematics
+    generate dialog data from text file
 
 weather
     [x] night 
