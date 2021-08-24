@@ -1,3 +1,5 @@
+import { ToastAlert } from './toast.js';
+
 export class InventoryController{
     constructor(){
         this.inventory = []
@@ -14,6 +16,7 @@ export class InventoryController{
 
     give(thing){
         this.inventory.push(thing)
+        new ToastAlert("You got:<br/>" + thing.name)
     }
     has(itemName){
         return this.inventory.find(item=>item.name===itemName)
