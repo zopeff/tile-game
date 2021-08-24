@@ -4,17 +4,24 @@ const ALERT_MARGIN = 30
 const ALERT_HEIGHT = 100
 const ALERT_LIFE = 5000; // 5 seconds
 
+export const TOAST_ICONS ={
+    ICON_QUEST: "alert-icon-quest",
+    ICON_INVENTORY: "alert-icon-inventory",
+    ICON_DEFAULT: ""
+}
 export class ToastAlert{
-    constructor(message){
-        this.create(message)
+
+    constructor(message, icon){
+
+        this.create(icon || TOAST_ICONS.ICON_DEFAULT, message)
         this.done = false
     }
 
-    create(message){
-        let template = "<div class='alert-content'><div class='alert-icon'></div><div class='alert-text'>%%alert%%</div></div>"
+    create(icon, message){
+        let template = "<div class='alert-content'><div class='alert-icon %%icon%%'></div><div class='alert-text'>%%alert%%</div></div>"
         let children = [...document.getElementById(ALERT_STACK_ID).children]
         let div = document.createElement("div")
-        div.innerHTML = template.replace("%%alert%%",message);
+        div.innerHTML = template.replace("%%alert%%",message).replace("%%icon%%", icon);
         div.className = 'alert-toast alert'
         div.id = 'alert-id'
 

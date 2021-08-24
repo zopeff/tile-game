@@ -1,4 +1,4 @@
-import { ToastAlert } from './toast.js';
+import { ToastAlert, TOAST_ICONS } from './toast.js';
 
 export class InventoryController{
     constructor(){
@@ -16,7 +16,7 @@ export class InventoryController{
 
     give(thing){
         this.inventory.push(thing)
-        new ToastAlert("You got:<br/>" + thing.name)
+        new ToastAlert("You got:<br/>" + thing.name, TOAST_ICONS.ICON_INVENTORY)
     }
     has(itemName){
         return this.inventory.find(item=>item.name===itemName)
