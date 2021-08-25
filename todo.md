@@ -95,7 +95,7 @@ weapons
     magic wand
 
 screens
-    alert/toast popups
+    [x] alert/toast popups
     title
     loading screen
     health
