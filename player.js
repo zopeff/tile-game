@@ -54,10 +54,11 @@ export class Player extends Sprite{
             if( world.map.canBreak(x,y)){
                 world.map.updateMap(x,y,0)
             }
-            let h = world.find(x,y)
-            if( h ){
-                world.removeEntity(h)
-            }
+            // dont kill Ron!
+            // let h = world.find(x,y)
+            // if( h ){
+            //     world.removeEntity(h)
+            // }
         };
     }
 }
