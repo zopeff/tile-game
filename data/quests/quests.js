@@ -24,8 +24,12 @@ export class Quest{
 
     setComplete(){
         new ToastAlert("You completed the quest!<br/>"+this.title, TOAST_ICONS.ICON_QUEST)
-
+        this.when = new Date()
         this.completed = true;
+    }
+
+    isComplete(){
+        return this.completed
     }
 
 }

@@ -3,6 +3,7 @@ import {Player} from './player.js';
 import {SpeechBubble} from './speech.js';
 import {WeatherController} from './weather/weather.js';
 import { ToastAlert } from './toast.js';
+import { QuestDialog } from './data/quests/dialog.js';
 export class Game{
     #world;
 
@@ -71,6 +72,21 @@ export class Game{
         //this.#world.select()
         let pos = this.#world.player.position
         switch(e.key){
+            case 'Escape':
+                if( this.questDialog ){
+                    this.questDialog.dismiss()
+                    delete this.questDialog
+               }
+               break;
+            case "q":
+                if( this.questDialog ){
+                     this.questDialog.dismiss()
+                     delete this.questDialog
+                }
+                else{
+                    this.questDialog = new QuestDialog().show(this.player.quests)
+                }
+                break;
             case "e":
                 this.#world.player.interact(this.ctx,this.world); 
                 break;

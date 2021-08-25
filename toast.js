@@ -48,7 +48,6 @@ export class ToastAlert{
     animationHandler(e) {
         let stack = document.getElementById(ALERT_STACK_ID)
         let children = [...stack.children]
-        console.log('fade in complete')
         let top=ALERT_MARGIN
         for(let i=0;i<children.length;i++,top+=ALERT_HEIGHT+ALERT_MARGIN){
             let c = children[i]

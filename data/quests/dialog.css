@@ -1,0 +1,53 @@
+@import url("/fonts/fontawesome/css/all.css");
+.dialog-frame{
+    background-color: blanchedalmond;
+    width: 450px;
+    height: 350px;
+    display: block;
+    border-radius: 35px;
+    border-style: solid;
+    border-color: #9e6a1d;
+    border-width: 5px;
+    z-index: 100;
+    position: absolute;
+    top: 30px;
+    margin-left: auto;
+}
+.dialog-icon{
+    width: 96px;
+    height: 96px;
+    margin:auto;
+    top:-32px;
+    position: relative;
+}
+
+.dialog-icon-quest{
+    background-image: url(/img/scroll_64.png);
+    background-size: cover;
+}
+
+.dialog-icon-inventory{
+    background-image: url(/img/inventory_64.png);
+    background-size: cover;
+}
+.dialog-content{
+    margin-left: 30px;
+    margin-right: 30px;
+    margin-bottom: 15px;
+    height: 220px;
+    font-size: large;
+    overflow-y: scroll;
+}
+.dialog-content dt{
+    font-style: italic;
+    font-weight: bold;
+}
+.dialog-content dd{
+    color:#323336;
+    margin-bottom: 3px;
+}
+.dialog-content .completed{
+    font-style: italic;
+    text-decoration: line-through;
+    color:gray !important;
+}

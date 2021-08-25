@@ -8,6 +8,7 @@
 
             /* @import url('https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz&display=swap'); */
             @import url('./toast.css');
+            @import url('./data/quests/dialog.css');
             * { margin:0; padding:0; }
             html, body{
                 width:100%;
@@ -27,6 +28,7 @@
     </head>
     <body>
         <canvas id='main-canvas' class='main-canvas' width="100%" height="100%" tabindex="1"></canvas>
+        <div id='ui-layer'></div>
         <div id='alert-stack'></div>
         <script type="module" src='./main.js'></script>
     </body>

@@ -1,5 +1,6 @@
 <html>
     <head>
+        <link href="/fonts/fontawesome/css/all.css" rel="stylesheet">
         <style>
             * { margin:0; padding:0; }
             html, body{
@@ -7,122 +8,78 @@
                 height: 100%;
             }
 
-            .alert-toast{
-                position: absolute;
-                right: 30;
-                top: -200;
-                z-index: 100;
+            .content{
+                padding:50px
             }
-            .push{
-                transition: transform .8s ease;
-                transform: translateY(230px);
-            }
-            .pushA{
-                transition: transform .7s ease;
-                transform: translateY(130px);
-            }
-            .fade{
-                transition: transform .7s ease, opacity .8s ease;  
-                opacity: 0; 
-                transform: translateY(130px);
-            }
-            .expire{
-                transition: opacity .8s ease;  
-                opacity: 0; 
-            }
-            .alert{
+
+            .dialog-frame{
                 background-color: blanchedalmond;
-                width: 300px;
-                height: 100px;
+                width: 450px;
+                height: 350px;
                 display: block;
                 border-radius: 35px;
                 border-style: solid;
                 border-color: #9e6a1d;
-                box-shadow: 5px 10px #888888;
+                border-width: 5px;
             }
-            .alert-content{
-                display: inline-block;
-            }
-            .alert-icon{
+            .dialog-icon{
                 width: 96px;
                 height: 96px;
-                background-image: url(./img/scroll_64.png);
-                background-size: cover;
-                /* background-color: black; */
-                margin-right: 15px;
-                left: -50px;
-                position: relative;
-                top: 5px;
-                
-            }
-            .alert-text{
-                margin-left: 45px;
-                top: -80px;
+                margin:auto;
+                top:-32px;
                 position: relative;
             }
 
-            .alert-dismiss{
+            .dialog-icon-quest{
+                background-image: url(./img/scroll_64.png);
+                background-size: cover;
+            }
+
+            .dialog-icon-inventory{
+                background-image: url(./img/inventory_64.png);
+                background-size: cover;
+            }
+            .dialog-content{
+                margin-left: 30px;
+                margin-right: 30px;
+                margin-bottom: 15px;
+                height: 220px;
+                font-size: large;
+                overflow-y: scroll;
+            }
+            .dialog-content dt{
                 font-style: italic;
-                color: inherit;
-                text-decoration: inherit;
+                font-weight: bold;
+            }
+            .dialog-content dd{
+                color:#323336;
+                margin-bottom: 3px;
+            }
+            .dialog-content .completed{
+                font-style: italic;
+                text-decoration: line-through;
+                color:gray !important;
             }
         </style>
     </head>
     <body>
-        <button onclick=push()>Push</button>
+        <div class='content'>
+            <div class='dialog-frame'>
+                    <div class='dialog-icon dialog-icon-quest'></div>
+                    <div class='dialog-content'>
+                        <dl>
+                            <span class='completed'>
+                                <i class="fas fa-check" style='margin-right: 5px;float:left;color:green'></i>
+                                <dt>item 1</dt>
+                                <dd >item 1 description. this could be a long thing with a lot of text</dd>
+                            </span>
+                        </dl>
 
-        <div style="display: none;">
-        <div id='alert-template' class='alert'>
-            <div class='alert-content'>
-                <div class='alert-icon'></div>
-                <div class='alert-text'></div>
+                    </div>
             </div>
         </div>
-        </div>
-        <div id='stack'>
-            
-        </div>
         <script>
-            function push(){
-                let template = "<div id='alert-template' class='alert'><div class='alert-content'><div class='alert-icon'></div><div class='alert-text'>%%alert%%</div></div></div>"
-                let children = [...document.getElementById('stack').children]
-                let div = document.createElement("div")
-                div.innerHTML = template.replace("%%alert%%","You recieved a new quest!<br/>Check your quest log for details.");
-                div.classList.add('alert-toast')
 
-                console.log(children.length)
-                div.addEventListener('transitionend', function handler(e) {
-                    e.target.removeEventListener('transitionend', handler)
-                    e.target.style.top='30px'
-                    e.target.classList.remove('push')
-                    children.forEach((c,i) => {
-                        c.style.top = 30+(130*(i+1))+"px";
-                        c.classList.remove('pushA')
-                        console.log(c)
-                        if( i >= 1 ){
-                            c.parentNode.removeChild(c)
-                        }
-                    })
-                });
-                // div.innerHTML = "<span>"+(children.length+1)+"</span>"
-                div.setAttribute("data-value",children.length+1)
-                document.getElementById('stack').prepend(div)
-                setTimeout(()=> {
-                    div.classList.add('push');
-                    children.forEach((c,i)=>{
-                        c.classList.add('pushA')
-                        if(1<=i){
-                            c.classList.add('fade')
-                        }
-                    })
-                },0)
-                setTimeout(()=>{
-                    div.classList.add('expire')
-                    div.addEventListener('transitionend', function handler(e) {
-                        e.target.parentNode.removeChild(e.target)
-                    })
-                },5000)
-            }
         </script>
     </body>
 </html>
