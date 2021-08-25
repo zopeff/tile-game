@@ -23,6 +23,8 @@ export class Quest{
     }
 
     setComplete(){
+        new ToastAlert("You completed the quest!<br/>"+this.title, TOAST_ICONS.ICON_QUEST)
+
         this.completed = true;
     }
 
@@ -47,9 +49,13 @@ export class QuestController{
         return new module.default(quest)
     }
 
-    async handleQuestEvent(e){
+    handleQuestEvent(e){
         // add to active quests
-        let q = await (this.loadQuest(e.id))
+        this.add(e.id)
+    }
+
+    async add(questId){
+        let q = await (this.loadQuest(questId))
         this.quests.push(q)
         new ToastAlert("You got a new quest!<br/>"+q.title, TOAST_ICONS.ICON_QUEST)
     }
