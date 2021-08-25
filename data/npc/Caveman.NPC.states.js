@@ -15,7 +15,7 @@ export default class Caveman_StateHandler extends NPCStateHandler{
         if( 'talk' === to ){
             window.game.speech.removeAll();
             this.state = to
-            let quest = window.game.player.quests.has('Foul_Ron_0')
+            let quest = window.game.player.quests.has('Foul_Ron_1')
             if( !quest ){
                 this.curr_message = window.game.speech.addMessage(this.parent.x,this.parent.y,"GRRRRR Go AWAY!");
             }

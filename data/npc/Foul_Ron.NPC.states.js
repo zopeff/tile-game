@@ -15,25 +15,30 @@ export default class FoulRon_StateHandler extends NPCStateHandler{
             // class and driven totally through the JSON config file
             window.game.speech.removeAll()
             this.state = to
-            let quest = window.game.player.quests.has('Foul_Ron_0') // need to move this to config
+            
+            let quest_box = window.game.player.quests.has('Foul_Ron_1') // need to move this to config
             if(this.state.dialog && !this.dialogHandler){
                 await this.loadDialogHandler()
-                this.dialogHandler.setContext(quest)
+                this.dialogHandler.setContext(quest_box)
             }
 
-            if( !quest ){
+            if( !quest_box ){
+                let quest_begin = window.game.player.quests.has('Foul_Ron_0') // need to move this to config
+                if(quest_begin){
+                    quest_begin.setComplete()
+                }
                 if( !this.dialogHandler.isDone() ){
                     this.dialogHandler.nextMsg();
                 }
             }
-            else if( !quest.completed ){
-                this.dialogHandler.setContext(quest)
-                if(quest.canComplete()){
+            else if( !quest_box.completed ){
+                this.dialogHandler.setContext(quest_box)
+                if(quest_box.canComplete()){
                     if( !this.dialogHandler.isDone() ){
                         this.dialogHandler.nextMsg();
                     }
                     else{
-                        quest.setComplete()
+                        quest_box.setComplete()
                     }
                 }
                 else{

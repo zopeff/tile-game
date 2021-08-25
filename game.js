@@ -37,6 +37,8 @@ export class Game{
         this.canvas.addEventListener('mouseup', (e)=>self.mouseUp(e) );
 
         this.#world.addPlayer( new Player())
+        this.player.quests.add("Foul_Ron_0")
+
         await this.#world.loadMap(this.ctx, 'overworld')
         this.player.position = [6,2]
         

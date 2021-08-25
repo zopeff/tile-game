@@ -55,9 +55,9 @@ npc
         goal
     [x] speak
     [x] conversation/interact
-    trigger behaviour
-        quest
-        map
+    trigger behaviour - cause NPC to do something
+        from a quest
+        from a map event
 
 enemy
     [x] kill/remove
@@ -70,10 +70,12 @@ sound
     bg music
     effects
 
-story
+story / quests
     [x] quest
     cinematics
     generate dialog data from text file
+    [x] new quest - "first talk to ron"
+    intro dialog to explain controls
 
 weather
     [x] night 

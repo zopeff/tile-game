@@ -1,24 +1,26 @@
 import {Quest} from './quests.js'
 
-export default class FoulRon_Quest extends Quest{
+export default class FoulRon_FirstQuest extends Quest{
     constructor(id){
         super(id)
     }
 
     get description(){
-        return "Somewhere in a cave lives a monster that stole Ron's box. Find the box and return it to him."
+        return "Find Ron and talk to him. It sounds like he needs some help."
     }
 
     get title(){
-        return "Find Foul Ole Ron's box"
+        return "Talk to Foul Ole Ron"
     }
 
     canComplete(){
-        return window.game.player.inventory.has('Foul Box')
+        // should have some way of knowing if the player
+        // talked to ron or not
+        return true
     }
 
     setComplete(){
-        window.game.player.inventory.remove('Foul Box')
+        super.setComplete()
         this.completed = true;
     }
 }

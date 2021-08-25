@@ -36,7 +36,7 @@ const QUEST_DIALOG = [
         msg:"I didnt, but I've heard something scarey lives in the cave behind the castle..." 
     },
     {
-        trigger:{type:'quest',id:'Foul_Ron_0'}
+        trigger:{type:'quest',id:'Foul_Ron_1'}
     }
 ]
 
