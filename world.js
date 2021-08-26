@@ -2,6 +2,7 @@ import { Game } from './game.js';
 import {Map} from './map.js';
 import {NPC} from './npc.js';
 import {fetchRemoteResource} from './util.js';
+import {Transitions} from './transitions.js';
 
 export class World{
     entities = [];
@@ -173,6 +174,7 @@ export class World{
             this.addEntities(mapConfig.entities)
             this.centerMapOnPlayer(ctx)
         }
+        Transitions.circle('in')
     }
 
     addObject(o){
