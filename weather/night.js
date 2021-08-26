@@ -2,11 +2,10 @@ export class Night{
     draw(ctx, timestamp){
         ctx.save()
         ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
-        let p = window.game.world.player.position
-        let wX = window.game.world.map.x
-        let wY = window.game.world.map.y
-        p[0] = p[0]-wX;
-        p[1] = p[1]-wY;
+        let p = window.game.world.player.screenPos
+        //need to move the center of the light to the rough center of the player
+        p[0]+=72 
+        p[1]+=64
 
         let startRadius = 20
         let endRadius = 90
@@ -15,7 +14,7 @@ export class Night{
         if(window.game.world.player.inventory.has('lantern')){
             startRadius = 40
             endRadius = 250
-            gradient = ctx.createRadialGradient((p[0]*48)+22, (p[1]*48)+16, startRadius, (p[0]*48)+22, (p[1]*48), endRadius);
+            gradient = ctx.createRadialGradient((p[0]), (p[1]), startRadius, (p[0]), (p[1]), endRadius);
             gradient.addColorStop(0, "rgba(0,0,0,0.2)");
             gradient.addColorStop(.5, 'rgba(0,0,0,0.4)');
             gradient.addColorStop(.6, 'rgba(0,0,0,0.65)');
@@ -25,7 +24,7 @@ export class Night{
             gradient.addColorStop(1, 'rgba(0,0,0,0.8)');
         }
         else{
-            gradient = ctx.createRadialGradient((p[0]*48)+22, (p[1]*48)+16, startRadius, (p[0]*48)+22, (p[1]*48), endRadius);
+            gradient = ctx.createRadialGradient((p[0]), (p[1]), startRadius, (p[0]), (p[1]), endRadius);
             gradient.addColorStop(0, "rgba(0,0,0,0.4)");
             gradient.addColorStop(.5, 'rgba(0,0,0,0.6)');
             gradient.addColorStop(.6, 'rgba(0,0,0,0.65)');

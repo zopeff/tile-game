@@ -201,7 +201,14 @@ export class Sprite extends Thing{
     }
 
     get screenPos(){
-        return [(this.x * 48)-this.offset[0],(this.y * 48)-this.offset[1]]
+        if( !game.world.map ){
+            return [0,0]
+        }
+        let x = ((this.x-game.world.map.x) * 48)-this.offset[0]
+        let y = ((this.y-game.world.map.y) * 48)-this.offset[1]
+        let mapOffset = game.world.map.mapDrawOffset
+
+        return [x+mapOffset[0],y+mapOffset[1]]
     }
 
     get hitBox(){
@@ -216,13 +223,12 @@ export class Sprite extends Thing{
     draw(ctx){
         let cur_frame = this.column + this.frame;
 
-        let x = ((this.x-ctx.world.map.x) * 48)-this.offset[0]
-        let y = ((this.y-ctx.world.map.y) * 48)-this.offset[1]
+        
         ctx.drawImage(this.#sprite, 
             (cur_frame * this.width),
             (this.row * this.height),
             this.width, this.height,
-            x,y,
+            this.screenPos[0],this.screenPos[1],
             this.width*this.scale_x, this.height*this.scale_y);    
 
         // hit box

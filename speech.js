@@ -25,9 +25,11 @@ export class SpeechBubble{
     }
 
     addMessage(x,y,msg){
+        // bump the coords if the map is being centered
+        
         this.bubbles.push({
-            x:(x*48)-48,
-            y:(y*48)-144,
+            x:((x*48)-48)+game.world.map.mapDrawOffset[0],
+            y:((y*48)-144)+game.world.map.mapDrawOffset[1],
             message:msg
         })
         return this.bubbles.length

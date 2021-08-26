@@ -2,23 +2,22 @@ import {fetchRemoteResource} from './util.js';
 
 export class Map{
     #tiles; // 40x36
-    #mapPath;
-    #tilesetPath;
-    #imgPath;
-    #name;
     map = {
         loaded:false
     }
 
     constructor(mapConfig){
         this.x = mapConfig.origin[0];
-        this.y = mapConfig.origin[1];    
+        this.y = mapConfig.origin[1];
+        this.loaded = false    
         this.mapConfig = mapConfig
     }
 
     get name(){return this.mapConfig.name};
 
     async load(ctx){
+        this.loaded = false
+
         this.#tiles = new Image()
         this.#tiles.src = this.mapConfig.imgPath
         let mapData = await fetchRemoteResource(this.mapConfig.mapPath);
@@ -40,6 +39,7 @@ export class Map{
         if( this.mapConfig.environment ){
             window.game.setWeather(this.mapConfig.environment[0])
         }
+        this.loaded = true
     }
 
     scrollMap(ctx,x,y){
@@ -51,10 +51,6 @@ export class Map{
         if( this.y+y>this.height-dy ){
             return false;
         }
-        //if( dx == this.width || dy == this.height){
-        //    return false;
-       // }
-
         this.x = Math.clamp(this.x+x,0,this.width)
         this.y = Math.clamp(this.y+y,0,this.height)
         return true
@@ -122,7 +118,22 @@ export class Map{
         return anim.animation[anim.curr].tileid
     }
 
+    get mapDrawOffset(){
+        if(!this.loaded) return [0,0]
 
+        let xx = Math.ceil((game.ctx.canvas.width / 48)/2)-1
+        let mx = Math.ceil(this.width / 2)
+        xx = (xx-mx)*48;
+        xx = Math.clamp(xx,0,xx)
+
+        let yy = Math.ceil((game.ctx.canvas.height / 48)/2)
+        let my = Math.ceil(this.height / 2)
+
+        yy = (yy-my)*48;
+        yy = Math.clamp(yy,0,yy)
+
+        return [xx,yy]
+    }
 
     draw(ctx,timestamp){
         if( !this.map.loaded ){
@@ -134,13 +145,15 @@ export class Map{
         }
         const elapsed = timestamp - this.animate_start;
 
+        let offset = this.mapDrawOffset
+
         this.map.data.forEach(layer => {
             if(layer.data ){
                 let dx = Math.clamp(Math.ceil(ctx.canvas.width / 48), 0, layer.width)
                 let dy = Math.clamp(Math.ceil(ctx.canvas.height / 48), 0, layer.height)
-                let sy = 0
+                let sy = offset[1]
                 for(let y = this.y; y < this.y+dy; y++,sy+=48){
-                    let sx = 0
+                    let sx = offset[0]
                     for(let x = this.x; x < this.x+dx; x++,sx+=48){
                         let i = y*layer.width+x
                         let t = layer.data[i]-1
