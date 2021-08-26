@@ -1,4 +1,4 @@
-@import url("/fonts/fontawesome/css/all.css");
+@import url("../../fonts/fontawesome/css/all.css");
 .dialog-frame{
     background-color: blanchedalmond;
     width: 450px;
@@ -22,12 +22,12 @@
 }
 
 .dialog-icon-quest{
-    background-image: url(/img/scroll_64.png);
+    background-image: url(../../img/scroll_64.png);
     background-size: cover;
 }
 
 .dialog-icon-inventory{
-    background-image: url(/img/inventory_64.png);
+    background-image: url(../../img/inventory_64.png);
     background-size: cover;
 }
 .dialog-content{
