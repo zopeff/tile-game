@@ -18,6 +18,7 @@ export default class FoulRon_Quest extends Quest{
     }
 
     setComplete(){
+        super.setComplete()
         window.game.player.inventory.remove('Foul Box')
         this.completed = true;
     }

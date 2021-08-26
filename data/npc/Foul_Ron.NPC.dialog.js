@@ -51,7 +51,7 @@ const THANKS_DIALOG = [
         msg:"You are very welcome!" 
     },
     {
-        trigger:{type:'alert',text:'You completed the quest!'}
+        trigger:{type:'quest',id:'Foul_Ron_1',completed:true}
     }
 ]
 

@@ -55,6 +55,8 @@ export class QuestController{
 
     handleQuestEvent(e){
         // add to active quests
+        if( e.completed ) return window.game.player.quests.has('Foul_Ron_1').setComplete()
+        
         this.add(e.id)
     }
 
