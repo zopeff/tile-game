@@ -1,7 +1,7 @@
-
-export class QuestDialog{
+import { UIDialog } from "../../uidialog.js";
+export class QuestDialog extends UIDialog{
     constructor(){
-        this.visible = false;
+        super()
     }
 
     show(items){
@@ -14,9 +14,8 @@ export class QuestDialog{
            `<span class='completed'><i class="fas fa-check" style='margin-right: 5px;float:left;color:green'></i>${li}</span>`
             )
         });
-        let template = `<div class='dialog-frame'><div class='dialog-icon dialog-icon-quest'></div><div class='dialog-content'><dl>${itemList.join('')}</dl></div></div>`
         let div = document.createElement("div")
-        div.innerHTML = template
+        div.innerHTML = this.build(itemList.join(''))
         div = div.firstChild
         div.style.left = (game.ctx.canvas.width / 2) - 225;
         document.getElementById('ui-layer').innerHTML="";
@@ -25,8 +24,4 @@ export class QuestDialog{
         return this;
     }
 
-    dismiss(){
-        this.visible = false;
-        document.getElementById('ui-layer').innerHTML="";
-    }
 }
