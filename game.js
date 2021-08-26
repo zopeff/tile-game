@@ -40,7 +40,7 @@ export class Game{
         this.#world.addPlayer( new Player())
         this.player.quests.add("Foul_Ron_0")
 
-        await this.#world.loadMap(this.ctx, 'overworld')
+        await this.#world.loadMap(this.ctx, 'house')
         this.player.position = [6,2]
         
         //this.toggleRain()
