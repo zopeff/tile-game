@@ -15,7 +15,7 @@ export class UIDialog{
         div.innerHTML = this.build(message)
         div = div.firstChild
         div.style.left = (game.ctx.canvas.width / 2) - 225;
-        
+        div.style.height = 460;
         document.getElementById('ui-layer').appendChild(div)
 
         let self = this;
