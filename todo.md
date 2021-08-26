@@ -20,6 +20,7 @@ Maps
     [x] save world state between transitions
     tiles from multiple tilesets
     map events
+    [x] draw small maps in the center of the screen
 
 animations
     [x] tile
@@ -73,7 +74,7 @@ sound
 story / quests
     [x] quest
     cinematics
-    generate dialog data from text file
+    generate NPC dialog data from text file
     [x] new quest - "first talk to ron"
     intro dialog to explain controls
 
@@ -91,10 +92,12 @@ environment/items
     cliff + rope/ladder
     castle + disguise
 
-weapons
+weapons / armour / items
     sword
     bow
     magic wand
+    wings/jetpack/flight
+
 
 screens
     [x] alert/toast popups
@@ -102,12 +105,12 @@ screens
     loading screen
     health
     score
-    transitions
+    [x] transitions
     inventory
-    quest log
-    dialog indicator for more text
-
-items/inventory
+    [x] quest log
+    dialog indicator for more text?
+    character names on speech bubbles?
+    [x] instructions/help
 
 game state
     [x] entity state
