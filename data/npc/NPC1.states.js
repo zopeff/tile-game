@@ -21,15 +21,9 @@ export class NPCStateHandler extends StateHandler{
             console.log(this.parent.name,"Cannot", to)
             return false;
         }
-        this.state = to
-        if('speak' === to && this.parent.y > 3){
-            let msg = this.randomMessage()
-            console.log(this.parent.name,"SPEAK",this.parent.x, this.parent.y, '"'+msg+'"')
-            this.curr_message = window.game.speech.addMessage(this.parent.x,this.parent.y,msg);
+        if('speak' === to && this.parent.y <= 3){
+            return false;
         }        
-        else if( 'idle' === to){
-            window.game.speech.removeMessage(this.curr_message)
-        }
         else if( 'interact' === to ){
             // data is the player pos
             // turn to face the player
@@ -55,6 +49,8 @@ export class NPCStateHandler extends StateHandler{
                 this.curr_message = window.game.speech.addMessage(this.parent.x,this.parent.y,"You should talk to Ron...");
             }
         }
+        this.state = to
+
         this.updating_state = false;
         return true;
     }
@@ -67,6 +63,7 @@ export class NPCStateHandler extends StateHandler{
         }
 
         if( elapsed > this.state.time){
+            window.game.speech.removeMessage(this.curr_message)
             if( 'idle' === this.state.id ){
                 //move in a random direction
                 const dirArr = ['up','down','left','right'];
@@ -76,10 +73,12 @@ export class NPCStateHandler extends StateHandler{
                 }
             }
             else if('speak' === this.state.id ){
+                let msg = this.randomMessage()
+                console.log(this.parent.name,"SPEAK",this.parent.x, this.parent.y, '"'+msg+'"')
+                this.curr_message = window.game.speech.addMessage(this.parent.x,this.parent.y,msg);
+    
                 // done spaking, back to normal
-                if( 0==Math.floor(Math.random() * 5) ){
-                    this.changeState("idle")
-                }
+                this.changeState("idle")
             }
             else if( 'interact' === this.state.id ){
                 // is player still standing there?
