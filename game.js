@@ -46,7 +46,7 @@ export class Game{
 
         if( "zopeff.github.io" === window.location.hostname ){
             await this.#world.loadMap(this.ctx, 'house')
-            this.player.position = [12,12]
+            this.player.position = [6,2]
             this.#world.centerMapOnPlayer(this.ctx)
             this.showWelcome()
             this.player.quests.add("Foul_Ron_0")
@@ -54,6 +54,8 @@ export class Game{
         else{
             // skip the intro for local dev
             await this.#world.loadMap(this.ctx, 'overworld')
+            this.player.position = [12,12]
+            this.#world.centerMapOnPlayer(this.ctx)
         }
         
         window.requestAnimationFrame(function(timestamp){self.render(timestamp)});
