@@ -1,7 +1,6 @@
 import {NPC} from './npc.js'
 export class Thing{
     name = "";
-    speed = 5;
     width = 100;
     height = 100;
 
@@ -67,7 +66,6 @@ export class Sprite extends Thing{
         this.scale_x = 3;
         this.scale_y=3;
 
-        this.speed = 8; //48 / 6(num frames)
         this.num_frames = 6;
 
         this.offset = [48,64]
@@ -78,10 +76,11 @@ export class Sprite extends Thing{
         // 3 = up
         this.facing = 0;
         this.frame = 0;
-        this.animSpeed = 100;
+        this.max_frame = 0
         this.animate_start;
-        this.max_frame = 0;
         this.animate_finished = null;
+        this.animate_xOffset = 0
+        this.animate_yOffset = 0
 
     }
 
@@ -133,43 +132,57 @@ export class Sprite extends Thing{
     }
 
     move(ctx, world, dir){
-        if( this.animate && !this.animate_move ){
+        if( this.animate || this.animate_move ){
             return; // only one at a time
         }
 
         this.column = 0;
         let success = false;
 
-
+        let offset = this.WalkSpeed * this.WalkFrames
         switch(dir){
             case 'up':
                 success = super.move(ctx, world, 0, -1 )
                 console.log(this.name,"up")
+                this.animate_yOffset = offset;
                 this.face(ctx,dir)
                 break;
             case 'down':
                 success = super.move(ctx, world, 0, 1 )
                 console.log(this.name,"down")
+                this.animate_yOffset = -offset;
                 this.row = 0
                 this.face(ctx,dir)
                 break;
             case 'left':
                 success = super.move(ctx, world, -1,0 )
                 console.log(this.name,"left")
+                this.animate_xOffset = offset;
                 this.row = 1
                 this.face(ctx,dir)
                 break;
             case 'right':
                 success = super.move(ctx, world, 1,0 )
                 console.log(this.name,"right")
+                this.animate_xOffset = -offset;
                 this.row = 2
                 this.face(ctx,dir)
                 break;
         }
 
-        this.max_frame = 5
-        this.animate = true;
-        this.animate_move = true;
+        if( !success ){
+            this.animate_xOffset = 0
+            this.animate_yOffset = 0
+        }
+        else{
+            this.animate = true;
+            this.max_frame = this.WalkFrames
+            this.animate_move = true;
+        }
+
+        if( !(this instanceof NPC)){
+            console.log(`Map: ${game.world.map.x}, P:${this.x}, Ps:${this.screenPos[0]}, Po:${this.animate_xOffset}`)
+        }
         return success;
     }
 
@@ -178,22 +191,38 @@ export class Sprite extends Thing{
             this.animate_start = timestamp;
         }
         const elapsed = timestamp - this.animate_start;
-        if( this.animate && elapsed > 80){
+        if( this.animate && elapsed > this.animateSpeed){
             this.frame++;
             if(this.animate_move){
-                //this.move(ctx,this.facing)
+                switch(this.facing){
+                    case 'up':
+                        this.animate_yOffset -= this.WalkSpeed;
+                        break;
+                    case 'down': 
+                        this.animate_yOffset += this.WalkSpeed;
+                        break;
+                    case 'left':
+                        this.animate_xOffset -= this.WalkSpeed;
+                        break;
+                    case 'right':
+                        this.animate_xOffset += this.WalkSpeed;
+                        break;
+                }
             }
             this.animate_start = timestamp;
             if( this.frame > this.max_frame ){
+                this.animate = false;
+                this.animate_move = false;
                 if(this.animate_finished){
                     this.animate_finished(ctx,world)
                 };
                 this.frame = 0;
                 this.column = 0;
-                this.animate = false;
                 this.animate_start = undefined
-                this.animate_move = false;
                 this.animate_finished = null;
+                this.animate_xOffset = 0;
+                this.animate_yOffset = 0;   
+                return false;     
             }
             return true;  
         }
@@ -220,15 +249,25 @@ export class Sprite extends Thing{
         ]
     }
 
+    get WalkFrames(){
+        return 0
+    }
+    get WalkSpeed(){
+        return Math.ceil(48/this.WalkFrames-1)
+    }
+    get animateSpeed(){
+        return 80
+    }
     draw(ctx){
         let cur_frame = this.column + this.frame;
+        let x = this.screenPos[0]
+        let y = this.screenPos[1]
 
-        
         ctx.drawImage(this.#sprite, 
             (cur_frame * this.width),
             (this.row * this.height),
             this.width, this.height,
-            this.screenPos[0],this.screenPos[1],
+            x,y,
             this.width*this.scale_x, this.height*this.scale_y);    
 
         // hit box

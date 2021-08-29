@@ -242,15 +242,11 @@ export class World{
         } )
         .forEach(o => {
             o.draw(ctx,timestamp)
-            if(elapsed > 500){
-                o.updateAnimate(ctx, this, timestamp)
-                this.animate_start = timestamp;
-            }
+            o.updateAnimate(ctx, this, timestamp)
+            this.animate_start = timestamp;
         })
         this.player.draw(ctx,timestamp)
-        //if(elapsed > 500){
-            this.player.updateAnimate(ctx, this, timestamp)
-       // }
+        this.player.updateAnimate(ctx, this, timestamp)
     }
 
     select(x,y){

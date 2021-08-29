@@ -20,6 +20,15 @@ export class NPC extends Sprite{
         })
     }
 
+    get screenPos(){
+        let p = super.screenPos
+        if( this.animate_move ){
+            p[0]+=this.animate_xOffset
+            p[1]+=this.animate_yOffset
+        }
+        return p
+    }
+
     getSaveData(){
         return {name:this.name,id:this.id,position:[this.x,this.y],stateData:this.stateHandler}
     }
@@ -41,12 +50,17 @@ export class NPC extends Sprite{
 
     get canInteract(){return this.stateHandler.can('interact')}
 
+    get WalkFrames(){
+        return 3
+    }
+
     udpateState(){
 
     }
 
     updateAnimate(ctx, world, timestamp){
-        
+        super.updateAnimate(ctx,world,timestamp)
+        if (this.animate_move || this.animate ) return
         if (this.animate_start === undefined){
             this.animate_start = timestamp;
         }

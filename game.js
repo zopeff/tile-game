@@ -20,7 +20,11 @@ export class Game{
 
     constructor(id){
         this.canvas = document.getElementById(id);
-        this.ctx = this.canvas.getContext('2d');    
+        this.ctx = this.canvas.getContext('2d',{ alpha: false });   
+        
+        this.canvasOffscreen = document.createElement('canvas');
+        this.ctxOffscreen = this.canvasOffscreen.getContext('2d',{ alpha: false })
+
         window.game = this;
     }
 
@@ -39,14 +43,13 @@ export class Game{
         this.canvas.addEventListener('mouseup', (e)=>self.mouseUp(e) );
 
         this.#world.addPlayer( new Player())
-        this.player.quests.add("Foul_Ron_0")
 
-        await this.#world.loadMap(this.ctx, 'house')
-        this.player.position = [6,2]
-        
-        //this.toggleRain()
-
-        this.showWelcome()
+        await this.#world.loadMap(this.ctx, 'overworld')
+        //await this.#world.loadMap(this.ctx, 'house')
+        //this.player.position = [12,12]
+        //this.#world.centerMapOnPlayer(this.ctx)
+        //this.showWelcome()
+        //this.player.quests.add("Foul_Ron_0")
         
         window.requestAnimationFrame(function(timestamp){self.render(timestamp)});
     }
@@ -114,11 +117,14 @@ export class Game{
         this.canvas.width = window.innerWidth;
         this.canvas.height = window.innerHeight;
         this.ctx.imageSmoothingEnabled = false;
+
+        this.canvasOffscreen.width = this.canvas.width+200;
+        this.canvasOffscreen.height = this.canvas.height+200;
+        this.ctxOffscreen.imageSmoothingEnabled = false;
     }
 
     keyDown(e){
-        //this.#world.select()
-        let pos = this.#world.player.position
+        let pos = this.#world.player?.position || [0,0]
         switch(e.key){
             case 'h':
                 this.showWelcome()
