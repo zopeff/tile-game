@@ -44,12 +44,17 @@ export class Game{
 
         this.#world.addPlayer( new Player())
 
-        await this.#world.loadMap(this.ctx, 'overworld')
-        //await this.#world.loadMap(this.ctx, 'house')
-        //this.player.position = [12,12]
-        //this.#world.centerMapOnPlayer(this.ctx)
-        //this.showWelcome()
-        //this.player.quests.add("Foul_Ron_0")
+        if( "zopeff.github.io" === window.location.hostname ){
+            await this.#world.loadMap(this.ctx, 'house')
+            this.player.position = [12,12]
+            this.#world.centerMapOnPlayer(this.ctx)
+            this.showWelcome()
+            this.player.quests.add("Foul_Ron_0")
+        }
+        else{
+            // skip the intro for local dev
+            await this.#world.loadMap(this.ctx, 'overworld')
+        }
         
         window.requestAnimationFrame(function(timestamp){self.render(timestamp)});
     }
