@@ -14,11 +14,13 @@ export class World{
     savedPositions = [];
     mapState = {}
 
+    constructor(ctx){
+        ctx.world = this;
+        this.mapScroll = [0,0];
+
+    }
+
     isCenter(playerPos){
-        console.log(playerPos[0], playerPos[1], 
-            this.map.x,this.map.y,
-            this.center[0],this.center[1],
-            playerPos[0]-this.map.x === this.center[0],playerPos[1]-this.map.y === this.center[1])
         return [
             playerPos[0]-this.map.x === this.center[0],
             playerPos[1]-this.map.y === this.center[1]
@@ -81,10 +83,6 @@ export class World{
 
     reset(){
         this.removeAllEntities()
-    }
-
-    constructor(ctx){
-        ctx.world = this;
     }
 
     async init(){
@@ -220,33 +218,65 @@ export class World{
         return this.entities.find(e=>(e.x===pos[0]&&e.y===pos[1]&&e.canInteract));
     }
 
+    // render (ctx, timestamp){
+    //     if( !this.#map ){
+    //         return;
+    //     }
+    //     if (this.animate_start === undefined){
+    //         this.animate_start = timestamp;
+    //     }
+    //     const elapsed = timestamp - this.animate_start;
+
+    //     ctx.clearRect(0,0,ctx.canvas.width, ctx.canvas.height)
+    //     this.#map.draw(ctx,timestamp);
+
+    //     this.entities.sort( (l,r) => l.y < r.y )
+    //     .filter(o => {
+    //         // might be better to do this at the actual point
+    //         // of draw and avoid this extra loop
+    //         return (o.x >= this.map.x && o.y >= this.map.y &&
+    //             o.x < (this.map.x+Math.ceil(ctx.canvas.width/48)) && 
+    //             o.y < (this.map.y+Math.ceil(ctx.canvas.height/48)))
+    //     } )
+    //     .forEach(o => {
+    //         o.draw(ctx,timestamp)
+    //         o.updateAnimate(ctx, this, timestamp)
+    //         this.animate_start = timestamp;
+    //     })
+    //     this.player.draw(ctx,timestamp)
+    //     this.player.updateAnimate(ctx, this, timestamp)
+    // }
+
     render (ctx, timestamp){
         if( !this.#map ){
             return;
         }
-        if (this.animate_start === undefined){
-            this.animate_start = timestamp;
-        }
-        const elapsed = timestamp - this.animate_start;
-
-        ctx.clearRect(0,0,ctx.canvas.width, ctx.canvas.height)
-        this.#map.draw(ctx,timestamp);
+        
+        game.ctxOffscreen.clearRect(0,0,game.ctxOffscreen.canvas.width, game.ctxOffscreen.canvas.height)
+        game.ctx.clearRect(0,0,game.ctx.canvas.width, game.ctx.canvas.height)
+        this.#map.draw(game.ctxOffscreen,timestamp);
 
         this.entities.sort( (l,r) => l.y < r.y )
         .filter(o => {
             // might be better to do this at the actual point
             // of draw and avoid this extra loop
             return (o.x >= this.map.x && o.y >= this.map.y &&
-                o.x < (this.map.x+Math.ceil(ctx.canvas.width/48)) && 
-                o.y < (this.map.y+Math.ceil(ctx.canvas.height/48)))
+                o.x < (this.map.x+Math.ceil(game.ctxOffscreen.canvas.width/48)) && 
+                o.y < (this.map.y+Math.ceil(game.ctxOffscreen.canvas.height/48)))
         } )
         .forEach(o => {
-            o.draw(ctx,timestamp)
-            o.updateAnimate(ctx, this, timestamp)
-            this.animate_start = timestamp;
+            o.draw(game.ctxOffscreen,timestamp)
+            o.updateAnimate(game.ctxOffscreen, this, timestamp)
         })
-        this.player.draw(ctx,timestamp)
-        this.player.updateAnimate(ctx, this, timestamp)
+
+        game.ctx.drawImage(game.ctxOffscreen.canvas,
+            this.mapScroll[0], this.mapScroll[1],
+            ctx.canvas.width, ctx.canvas.height,
+            0,0,
+            game.ctx.canvas.width, game.ctx.canvas.height)
+
+        this.player.draw(game.ctx,timestamp)
+        this.player.updateAnimate(game.ctx, this, timestamp)
     }
 
     select(x,y){

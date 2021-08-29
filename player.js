@@ -10,7 +10,7 @@ export class Player extends Sprite{
         this.quests = new QuestController()
     }
     get WalkFrames(){
-        return 5
+        return 1
     }
 
     toJSON(){

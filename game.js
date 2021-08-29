@@ -23,7 +23,7 @@ export class Game{
         this.ctx = this.canvas.getContext('2d',{ alpha: false });   
         
         this.canvasOffscreen = document.createElement('canvas');
-        this.ctxOffscreen = this.canvasOffscreen.getContext('2d',{ alpha: false })
+        this.ctxOffscreen = this.canvasOffscreen.getContext('2d',{ alpha: true })
 
         window.game = this;
     }
@@ -56,6 +56,7 @@ export class Game{
             await this.#world.loadMap(this.ctx, 'overworld')
             this.player.position = [12,12]
             this.#world.centerMapOnPlayer(this.ctx)
+            game.toggleRain()
         }
         
         window.requestAnimationFrame(function(timestamp){self.render(timestamp)});
