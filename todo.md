@@ -40,7 +40,7 @@ interact
 player
     [x] move
     [x] attack
-    smooth map / walk animation
+    [x] smooth map / walk animation
     health/damage
     inventory / pickups
     death
