@@ -14,6 +14,9 @@ export class Player extends Sprite{
     get WalkFrames(){
         return 5
     }
+    get animateSpeed(){
+        return 20
+    }
 
     toJSON(){
         let val = {id:'player',position:[this.position[0],this.position[1]],inventory:this.inventory,quests:this.quests}

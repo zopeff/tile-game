@@ -5,6 +5,9 @@ import {WeatherController} from './weather/weather.js';
 import { ToastAlert } from './toast.js';
 import { QuestDialog } from './data/quests/dialog.js';
 import { UIDialog } from './uidialog.js';
+
+const SCROLL_SPEED = 12
+const SCROLL_MAX = 48
 export class Game{
     #world;
 
@@ -141,7 +144,7 @@ export class Game{
 
     requestMove(dir){
         this.player.face(this.ctx,dir)
-        if(this.player.animate) return
+        //if(this.player.animate) return
         if('right'===dir && this.world.canMove(game.player.position[0]+1,game.player.position[1],false)){
             // map cannot move
             if(!this.world.map.canScroll(this.ctx,1,0) || !this.#world.isCenter(game.player.position)[0]){
@@ -152,8 +155,8 @@ export class Game{
                 this.player.startAnimate()
                 this.world.animationController = new AnimationController(0,0, 
                     ()=>{
-                        this.#world.mapScroll[0]+=8
-                        if(this.#world.mapScroll[0]===48){
+                        this.#world.mapScroll[0]+=SCROLL_SPEED
+                        if(this.#world.mapScroll[0]===SCROLL_MAX){
                             this.#world.mapScroll[0] = 0
                             this.player.position = [game.player.position[0]+1,game.player.position[1]]
                             this.#world.map.scrollMap(this.ctx,1,0)
@@ -170,8 +173,8 @@ export class Game{
                 this.player.startAnimate()
                 this.world.animationController = new AnimationController(0,0, 
                     ()=>{
-                        this.#world.mapScroll[0]-=8
-                        if(this.#world.mapScroll[0]===-48){
+                        this.#world.mapScroll[0]-=SCROLL_SPEED
+                        if(this.#world.mapScroll[0]===-SCROLL_MAX){
                             this.#world.mapScroll[0] = 0
                             this.player.position = [game.player.position[0]-1,game.player.position[1]]
                             this.#world.map.scrollMap(this.ctx,-1,0)
@@ -188,8 +191,8 @@ export class Game{
                 this.player.startAnimate()
                 this.world.animationController = new AnimationController(0,0, 
                     ()=>{
-                        this.#world.mapScroll[1]-=8
-                        if(this.#world.mapScroll[1]===-48){
+                        this.#world.mapScroll[1]-=SCROLL_SPEED
+                        if(this.#world.mapScroll[1]===-SCROLL_MAX){
                             this.#world.mapScroll[1] = 0
                             this.player.position = [game.player.position[0],game.player.position[1]-1]
                             this.#world.map.scrollMap(this.ctx,0,-1)
@@ -206,8 +209,8 @@ export class Game{
                 this.player.startAnimate()
                 this.world.animationController = new AnimationController(0,0, 
                     ()=>{
-                        this.#world.mapScroll[1]+=8
-                        if(this.#world.mapScroll[1]===48){
+                        this.#world.mapScroll[1]+=SCROLL_SPEED
+                        if(this.#world.mapScroll[1]===SCROLL_MAX){
                             this.#world.mapScroll[1] = 0
                             this.player.position = [game.player.position[0],game.player.position[1]+1]
                             this.#world.map.scrollMap(this.ctx,0,1)
