@@ -8,7 +8,7 @@ export class NPC extends Sprite{
         this.height = options.tiles.height;
         this.animate = true;
         this.animate_move = true;
-        this.offset = [0,38]
+        this.offset = [0,32]
         this.loaded = false;
         this.loadStateHandler(options);
     }
@@ -22,6 +22,9 @@ export class NPC extends Sprite{
 
     get screenPos(){
         let p = super.screenPos
+        // need to compensate for the offscreen canvas offset
+        p[0] += game.world.map.x === 0 ? 0 : 48
+        p[1] += game.world.map.y === 0 ? 0 : 48
         if( this.animate_move ){
             p[0]+=this.animate_xOffset
             p[1]+=this.animate_yOffset
@@ -52,6 +55,9 @@ export class NPC extends Sprite{
 
     get WalkFrames(){
         return 3
+    }
+    get animateSpeed(){
+        return 80
     }
 
     udpateState(){

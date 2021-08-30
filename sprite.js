@@ -180,9 +180,6 @@ export class Sprite extends Thing{
             this.animate_move = true;
         }
 
-        if( !(this instanceof NPC)){
-            console.log(`Map: [${game.world.map.x},${game.world.map.y}], P:${this.position}, Ps:${this.screenPos}, Po:[${this.animate_xOffset},${this.animate_yOffset}]`)
-        }
         return success;
     }
 
@@ -233,7 +230,8 @@ export class Sprite extends Thing{
         if( !game.world.map ){
             return [0,0]
         }
-        let x = ((this.position[0]-game.world.map.x) * 48)-this.offset[0]
+        let wx = game.world.map.x// > 0 ? game.world.map.x-1 : 0
+        let x = ((this.position[0]-wx) * 48)-this.offset[0]
         let y = ((this.position[1]-game.world.map.y) * 48)-this.offset[1]
         let mapOffset = game.world.map.mapDrawOffset
 
@@ -256,7 +254,7 @@ export class Sprite extends Thing{
         return Math.ceil(48/this.WalkFrames-1)
     }
     get animateSpeed(){
-        return 80
+        return 40
     }
     draw(ctx){
         let cur_frame = this.column + this.frame;

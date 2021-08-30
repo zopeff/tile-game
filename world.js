@@ -4,6 +4,13 @@ import {NPC} from './npc.js';
 import {fetchRemoteResource} from './util.js';
 import {Transitions} from './transitions.js';
 
+export class AnimationController{
+    constructor(dx,dy, updateFn){
+        this.dx = dx
+        this.dy = dy
+        this.update = updateFn
+    }
+}
 export class World{
     entities = [];
     #map;
@@ -16,6 +23,7 @@ export class World{
 
     constructor(ctx){
         ctx.world = this;
+        this.animationController = null;
         this.mapScroll = [0,0];
 
     }
@@ -269,14 +277,30 @@ export class World{
             o.updateAnimate(game.ctxOffscreen, this, timestamp)
         })
 
+        let dx = this.map.x === 0? 0: 48;
+        let dy = this.map.y === 0? 0: 48;
         game.ctx.drawImage(game.ctxOffscreen.canvas,
-            this.mapScroll[0], this.mapScroll[1],
+            dx+this.mapScroll[0], dy+this.mapScroll[1],
             ctx.canvas.width, ctx.canvas.height,
             0,0,
             game.ctx.canvas.width, game.ctx.canvas.height)
 
         this.player.draw(game.ctx,timestamp)
         this.player.updateAnimate(game.ctx, this, timestamp)
+    }
+
+    updateAnimate(ctx, timestamp){
+        if (this.animate_start === undefined){
+            this.animate_start = timestamp;
+        }
+        const elapsed = timestamp - this.animate_start;
+
+        if( elapsed > 20){
+            if( this.animationController ){
+                this.animationController.update()
+            }
+            this.animate_start = timestamp;
+        }
     }
 
     select(x,y){

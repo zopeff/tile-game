@@ -80,8 +80,8 @@ export class SpeechBubble{
 
                 return answer
             }
-            let mx = msg.x-(world.map.x*48)
-            let my = msg.y-(world.map.y*48)
+            let mx = msg.x-(world.map.x*48)-game.world.mapScroll[0]
+            let my = msg.y-(world.map.y*48)-game.world.mapScroll[1]
 
             ctx.font = FONT;
             let metrics

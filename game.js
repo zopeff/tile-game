@@ -1,4 +1,4 @@
-import {World} from './world.js';
+import {World,AnimationController} from './world.js';
 import {Player} from './player.js';
 import {SpeechBubble} from './speech.js';
 import {WeatherController} from './weather/weather.js';
@@ -54,9 +54,12 @@ export class Game{
         else{
             // skip the intro for local dev
             await this.#world.loadMap(this.ctx, 'overworld')
-            this.player.position = [12,12]
+            //this.player.position = [22,11]
+            this.player.position = [16,6]
             this.#world.centerMapOnPlayer(this.ctx)
             game.toggleRain()
+            console.log(`Map: [${game.world.map.x},${game.world.map.y}], P:${this.player.position}, Ps:${this.player.screenPos}, Po:[${this.player.animate_xOffset},${this.player.animate_yOffset}], As:${this.player.animateSpeed}`)
+
         }
         
         window.requestAnimationFrame((timestamp)=>self.render(timestamp));
@@ -116,13 +119,13 @@ export class Game{
         }
         const elapsed = timestamp - this.animate_start;
 
-        if(elapsed > 100){
+        //if(elapsed > 40){
             this.#world.render(this.ctx, timestamp)
-
             this.speech.draw(this.ctx, this.world)
             this.weather.draw(this.ctx,timestamp)
             this.animate_start = timestamp
-        }
+            this.world.updateAnimate(this.ctx,timestamp)
+        //}
         window.requestAnimationFrame((timestamp)=>this.render(timestamp));
     }
 
@@ -134,6 +137,87 @@ export class Game{
         this.canvasOffscreen.width = this.canvas.width+200;
         this.canvasOffscreen.height = this.canvas.height+200;
         this.ctxOffscreen.imageSmoothingEnabled = false;
+    }
+
+    requestMove(dir){
+        this.player.face(this.ctx,dir)
+        if(this.player.animate) return
+        if('right'===dir && this.world.canMove(game.player.position[0]+1,game.player.position[1],false)){
+            // map cannot move
+            if(!this.world.map.canScroll(this.ctx,1,0) || !this.#world.isCenter(game.player.position)[0]){
+                this.#world.player.move(this.ctx, this.#world, dir)
+            }
+            else{
+                // normal - player is attached to map center
+                this.player.startAnimate()
+                this.world.animationController = new AnimationController(0,0, 
+                    ()=>{
+                        this.#world.mapScroll[0]+=8
+                        if(this.#world.mapScroll[0]===48){
+                            this.#world.mapScroll[0] = 0
+                            this.player.position = [game.player.position[0]+1,game.player.position[1]]
+                            this.#world.map.scrollMap(this.ctx,1,0)
+                            this.world.animationController = null;
+                        }
+                    })
+            }
+        }
+        else if('left'===dir && this.world.canMove(game.player.position[0]-1,game.player.position[1],false)){
+            if(!this.world.map.canScroll(this.ctx,-1,0) || !this.#world.isCenter(game.player.position)[0]){
+                this.#world.player.move(this.ctx, this.#world, dir)
+            }
+            else{
+                this.player.startAnimate()
+                this.world.animationController = new AnimationController(0,0, 
+                    ()=>{
+                        this.#world.mapScroll[0]-=8
+                        if(this.#world.mapScroll[0]===-48){
+                            this.#world.mapScroll[0] = 0
+                            this.player.position = [game.player.position[0]-1,game.player.position[1]]
+                            this.#world.map.scrollMap(this.ctx,-1,0)
+                            this.world.animationController = null;
+                        }
+                    })
+            }
+        }
+        else if('up'===dir && this.world.canMove(game.player.position[0],game.player.position[1]-1,false)){
+            if(!this.world.map.canScroll(this.ctx,0,-1) || !this.#world.isCenter(game.player.position)[1]){
+                this.#world.player.move(this.ctx, this.#world, dir)
+            }
+            else{
+                this.player.startAnimate()
+                this.world.animationController = new AnimationController(0,0, 
+                    ()=>{
+                        this.#world.mapScroll[1]-=8
+                        if(this.#world.mapScroll[1]===-48){
+                            this.#world.mapScroll[1] = 0
+                            this.player.position = [game.player.position[0],game.player.position[1]-1]
+                            this.#world.map.scrollMap(this.ctx,0,-1)
+                            this.world.animationController = null;
+                        }
+                    })
+            }
+        }
+        else if('down'===dir && this.world.canMove(game.player.position[0],game.player.position[1]+1,false)){
+            if(!this.world.map.canScroll(this.ctx,0,1) || !this.#world.isCenter(game.player.position)[1]){
+                this.#world.player.move(this.ctx, this.#world, dir)
+            }
+            else{
+                this.player.startAnimate()
+                this.world.animationController = new AnimationController(0,0, 
+                    ()=>{
+                        this.#world.mapScroll[1]+=8
+                        if(this.#world.mapScroll[1]===48){
+                            this.#world.mapScroll[1] = 0
+                            this.player.position = [game.player.position[0],game.player.position[1]+1]
+                            this.#world.map.scrollMap(this.ctx,0,1)
+                            this.world.animationController = null;
+                        }
+                    })
+            }
+        }
+        console.log(`Map: [${game.world.map.x},${game.world.map.y}], P:[${this.player.position}], Ps:${this.player.screenPos}, Po:[${this.player.animate_xOffset},${this.player.animate_yOffset}], As:${this.player.animateSpeed}`)
+        //console.log(`N:${this.#world.entities[0].name} - Mo: [${game.world.map.mapDrawOffset}], P:${this.#world.entities[0].position}, Ps:${this.#world.entities[0].screenPos}, Po:[${this.#world.entities[0].animate_xOffset},${this.#world.entities[0].animate_yOffset}], As:${this.#world.entities[0].animateSpeed}`)
     }
 
     keyDown(e){
@@ -168,9 +252,10 @@ export class Game{
                     this.#world.map.scrollMap(this.ctx,1,0)
                 }
                 else{
-                    if(this.#world.player.move(this.ctx, this.#world, 'right') && this.#world.isCenter(pos)[0]){
-                        this.#world.map.scrollMap(this.ctx,1,0)
-                    }
+                    this.requestMove('right')
+                    // if(this.#world.player.move(this.ctx, this.#world, 'right') && this.#world.isCenter(pos)[0]){
+                    //     this.#world.map.scrollMap(this.ctx,1,0)
+                    // }
                     this.world.checkEvent(this.ctx)
                 }
                 break;
@@ -179,11 +264,11 @@ export class Game{
                     this.#world.map.scrollMap(this.ctx,-1,0)
                 }
                 else{
-                    if(this.#world.player.move(this.ctx, this.#world,'left') && 
-                        this.#world.isCenter(pos)[0]){
-                        this.#world.map.scrollMap(this.ctx,-1,0)
-                    }
-                     
+                    // if(this.#world.player.move(this.ctx, this.#world,'left') && 
+                    //     this.#world.isCenter(pos)[0]){
+                    //     this.#world.map.scrollMap(this.ctx,-1,0)
+                    // }
+                    this.requestMove('left')                     
                     this.world.checkEvent(this.ctx)
                 } 
                 break;
@@ -192,10 +277,11 @@ export class Game{
                     this.#world.map.scrollMap(this.ctx,0,1)
                 }
                 else{
-                    if(this.#world.player.move(this.ctx, this.#world, 'down' ) && 
-                        this.#world.isCenter(pos)[1]){
-                        this.#world.map.scrollMap(this.ctx,0,1)
-                    }
+                    // if(this.#world.player.move(this.ctx, this.#world, 'down' ) && 
+                    //     this.#world.isCenter(pos)[1]){
+                    //     this.#world.map.scrollMap(this.ctx,0,1)
+                    // }
+                    this.requestMove('down')
                     this.world.checkEvent(this.ctx)
                 }
                 break;
@@ -204,11 +290,11 @@ export class Game{
                     this.#world.map.scrollMap(this.ctx,0,-1)
                 }
                 else{
-                    if(this.#world.player.move(this.ctx, this.#world,'up') && 
-                        this.#world.isCenter(pos)[1]){
-                        this.#world.map.scrollMap(this.ctx,0,-1)
-                    }
-                    ; 
+                    // if(this.#world.player.move(this.ctx, this.#world,'up') && 
+                    //     this.#world.isCenter(pos)[1]){
+                    //     this.#world.map.scrollMap(this.ctx,0,-1)
+                    // }
+                    this.requestMove('up'); 
                     this.world.checkEvent(this.ctx)
                 }
                 break;

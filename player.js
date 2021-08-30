@@ -8,9 +8,11 @@ export class Player extends Sprite{
 
         this.inventory = new InventoryController() 
         this.quests = new QuestController()
+
+        this.animationController = null;
     }
     get WalkFrames(){
-        return 1
+        return 5
     }
 
     toJSON(){
@@ -33,7 +35,25 @@ export class Player extends Sprite{
             // trigger 'interact' state?
             o.stateHandler.changeState('interact', {position:this.position})
         }
-        
+    }
+
+    get screenPos(){
+        let p = super.screenPos
+        if( this.animate_move ){
+            p[0]+=this.animate_xOffset
+            p[1]+=this.animate_yOffset
+        }
+        return p
+    }
+
+    startAnimate(){
+        this.column = 0;
+        this.animate_xOffset = 0
+        this.animate_yOffset = 0
+
+        this.animate = true;
+        this.max_frame = this.WalkFrames
+
     }
 
     fire(ctx, world, finished){

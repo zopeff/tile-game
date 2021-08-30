@@ -56,6 +56,24 @@ export class Map{
         return true
     }
 
+    canScroll(ctx,x,y){
+        let dx = Math.clamp(Math.ceil(ctx.canvas.width / 48),0,this.width)
+        let dy = Math.clamp(Math.ceil(ctx.canvas.height / 48),0,this.height)
+        if( 0 > this.x+x ){
+            return false;
+        }
+        if( 0 > this.y+y ){
+            return false;
+        }
+        if( this.x+x>this.width-dx ){
+            return false;
+        }
+        if( this.y+y>this.height-dy ){
+            return false;
+        }
+        return true
+    }
+
     canMove(x,y){
         if( !this.map || !this.map.data ){
             return;
@@ -121,7 +139,7 @@ export class Map{
     get mapDrawOffset(){
         if(!this.loaded) return [0,0]
 
-        let xx = Math.ceil((game.ctx.canvas.width / 48)/2)-1
+        let xx = Math.ceil((game.ctx.canvas.width / 48)/2)
         let mx = Math.ceil(this.width / 2)
         xx = (xx-mx)*48;
         xx = Math.clamp(xx,0,xx)
@@ -145,16 +163,20 @@ export class Map{
         }
         const elapsed = timestamp - this.animate_start;
 
+        let wx = this.x-1 < 0 ? 0 : this.x-1
+        let wy = this.y-1 < 0 ? 0 : this.y-1
         let offset = this.mapDrawOffset
 
         this.map.data.forEach(layer => {
             if(layer.data ){
-                let dx = Math.clamp(Math.ceil(ctx.canvas.width / 48), 0, layer.width)
-                let dy = Math.clamp(Math.ceil(ctx.canvas.height / 48), 0, layer.height)
+                let dx = Math.clamp(Math.ceil(ctx.canvas.width / 48)+1, 0, layer.width)
+                let dy = Math.clamp(Math.ceil(ctx.canvas.height / 48)+1, 0, layer.height)
                 let sy = offset[1]
-                for(let y = this.y; y < this.y+dy; y++,sy+=48){
+                for(let y = wy; y < wy+dy; y++,sy+=48){
+                    if( y < 0) continue
                     let sx = offset[0]
-                    for(let x = this.x; x < this.x+dx; x++,sx+=48){
+                    for(let x = wx; x < wx+dx; x++,sx+=48){
+                        if( x < 0) continue
                         let i = y*layer.width+x
                         let t = layer.data[i]-1
                         if( t > -1){
