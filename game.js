@@ -59,7 +59,7 @@ export class Game{
             game.toggleRain()
         }
         
-        window.requestAnimationFrame(function(timestamp){self.render(timestamp)});
+        window.requestAnimationFrame((timestamp)=>self.render(timestamp));
     }
 
     get world(){return this.#world}
@@ -111,14 +111,19 @@ export class Game{
     }
 
     render(timestamp){
-        let self = this;
+        if (this.animate_start === undefined){
+            this.animate_start = timestamp;
+        }
+        const elapsed = timestamp - this.animate_start;
 
-        this.#world.render(this.ctx, timestamp)
+        if(elapsed > 100){
+            this.#world.render(this.ctx, timestamp)
 
-        this.speech.draw(this.ctx, this.world)
-        this.weather.draw(this.ctx,timestamp)
-
-        window.requestAnimationFrame(function(timestamp){self.render(timestamp)});
+            this.speech.draw(this.ctx, this.world)
+            this.weather.draw(this.ctx,timestamp)
+            this.animate_start = timestamp
+        }
+        window.requestAnimationFrame((timestamp)=>this.render(timestamp));
     }
 
     resizeCanvas(){

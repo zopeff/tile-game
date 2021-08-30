@@ -3,7 +3,7 @@
     Blatently stolen from https://github.com/geoffb/canvas-rain-demo
 */
 
-const FIXED_STEP = 16;
+const FIXED_STEP = 60;
 // Wind
 const WIND_VELOCITY = -0.1; // Determines how slanted the rain drops fall, 0 = straight down
 
