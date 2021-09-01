@@ -42,7 +42,8 @@ export class Game{
         let self = this;
 
         window.addEventListener('resize', function(){self.resizeCanvas()}, false);
-        this.canvas.addEventListener('keydown', (e)=>self.keyDown(e),);
+        this.canvas.addEventListener('keydown', (e)=>self.keyDown(e));
+        this.canvas.addEventListener('keyup', (e)=>self.keyUp(e));
         this.canvas.addEventListener('mouseup', (e)=>self.mouseUp(e) );
 
         this.#world.addPlayer( new Player())
@@ -123,6 +124,7 @@ export class Game{
         const elapsed = timestamp - this.animate_start;
 
         //if(elapsed > 40){
+            if( this.moveFn ) this.moveFn();
             this.#world.render(this.ctx, timestamp)
             this.speech.draw(this.ctx, this.world)
             this.weather.draw(this.ctx,timestamp)
@@ -222,9 +224,16 @@ export class Game{
         console.log(`Map: [${game.world.map.x},${game.world.map.y}], P:[${this.player.position}], Ps:${this.player.screenPos}, Po:[${this.player.animate_xOffset},${this.player.animate_yOffset}], As:${this.player.animateSpeed}`)
         //console.log(`N:${this.#world.entities[0].name} - Mo: [${game.world.map.mapDrawOffset}], P:${this.#world.entities[0].position}, Ps:${this.#world.entities[0].screenPos}, Po:[${this.#world.entities[0].animate_xOffset},${this.#world.entities[0].animate_yOffset}], As:${this.#world.entities[0].animateSpeed}`)
     }
+    
+    keyUp(e){
+        // this should be an array so we can track multiple keys at once
+        this.moveFn = null
+    }
 
     keyDown(e){
+        //if (e.repeat) return;
         let pos = this.#world.player?.position || [0,0]
+        this.moveFn = null
         switch(e.key){
             case 'h':
                 this.showWelcome()
@@ -255,7 +264,7 @@ export class Game{
                     this.#world.map.scrollMap(this.ctx,1,0)
                 }
                 else{
-                    this.requestMove('right')
+                    this.moveFn = ()=>this.requestMove('right')
                     // if(this.#world.player.move(this.ctx, this.#world, 'right') && this.#world.isCenter(pos)[0]){
                     //     this.#world.map.scrollMap(this.ctx,1,0)
                     // }
@@ -271,7 +280,7 @@ export class Game{
                     //     this.#world.isCenter(pos)[0]){
                     //     this.#world.map.scrollMap(this.ctx,-1,0)
                     // }
-                    this.requestMove('left')                     
+                    this.moveFn = ()=>this.requestMove('left')                     
                     this.world.checkEvent(this.ctx)
                 } 
                 break;
@@ -284,7 +293,7 @@ export class Game{
                     //     this.#world.isCenter(pos)[1]){
                     //     this.#world.map.scrollMap(this.ctx,0,1)
                     // }
-                    this.requestMove('down')
+                    this.moveFn = ()=>this.requestMove('down')
                     this.world.checkEvent(this.ctx)
                 }
                 break;
@@ -297,7 +306,7 @@ export class Game{
                     //     this.#world.isCenter(pos)[1]){
                     //     this.#world.map.scrollMap(this.ctx,0,-1)
                     // }
-                    this.requestMove('up'); 
+                    this.moveFn = ()=>this.requestMove('up'); 
                     this.world.checkEvent(this.ctx)
                 }
                 break;
