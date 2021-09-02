@@ -4,6 +4,7 @@ export default class MapEvents {
             return async function(ctx,world){
                 await world.loadMap(ctx)
                 world.restorePosition(ctx);
+                world.player.y++;
             }
         }
     }

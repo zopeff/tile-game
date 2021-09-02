@@ -108,6 +108,7 @@ export class Map{
     }
 
     checkEvents(x,y){
+        if( !this.events )return
         return this.events.checkEvents(x,y)
     }
 

@@ -29,6 +29,7 @@ export class Game{
         this.ctxOffscreen = this.canvasOffscreen.getContext('2d',{ alpha: true })
 
         window.game = this;
+        this.moveFn = {}
     }
 
     async init(){
@@ -122,14 +123,15 @@ export class Game{
             this.animate_start = timestamp;
         }
         const elapsed = timestamp - this.animate_start;
-
-        //if(elapsed > 40){
-            if( this.moveFn ) this.moveFn();
+//        if(elapsed > 40){
+            // check the keyboard
+            Object.keys(this.moveFn).forEach((fn)=> {if(this.moveFn[fn])this.moveFn[fn]()} );
+//            this.animate_start = timestamp
             this.#world.render(this.ctx, timestamp)
             this.speech.draw(this.ctx, this.world)
             this.weather.draw(this.ctx,timestamp)
-            this.animate_start = timestamp
             this.world.updateAnimate(this.ctx,timestamp)
+            this.world.checkEvent(this.ctx)
         //}
         window.requestAnimationFrame((timestamp)=>this.render(timestamp));
     }
@@ -163,6 +165,7 @@ export class Game{
                             this.player.position = [game.player.position[0]+1,game.player.position[1]]
                             this.#world.map.scrollMap(this.ctx,1,0)
                             this.world.animationController = null;
+                            //this.world.checkEvent(this.ctx)
                         }
                     })
             }
@@ -181,6 +184,7 @@ export class Game{
                             this.player.position = [game.player.position[0]-1,game.player.position[1]]
                             this.#world.map.scrollMap(this.ctx,-1,0)
                             this.world.animationController = null;
+                            //this.world.checkEvent(this.ctx)
                         }
                     })
             }
@@ -199,6 +203,7 @@ export class Game{
                             this.player.position = [game.player.position[0],game.player.position[1]-1]
                             this.#world.map.scrollMap(this.ctx,0,-1)
                             this.world.animationController = null;
+                            //this.world.checkEvent(this.ctx)
                         }
                     })
             }
@@ -217,23 +222,32 @@ export class Game{
                             this.player.position = [game.player.position[0],game.player.position[1]+1]
                             this.#world.map.scrollMap(this.ctx,0,1)
                             this.world.animationController = null;
+                            //this.world.checkEvent(this.ctx)
                         }
                     })
             }
         }
+        
+
         console.log(`Map: [${game.world.map.x},${game.world.map.y}], P:[${this.player.position}], Ps:${this.player.screenPos}, Po:[${this.player.animate_xOffset},${this.player.animate_yOffset}], As:${this.player.animateSpeed}`)
         //console.log(`N:${this.#world.entities[0].name} - Mo: [${game.world.map.mapDrawOffset}], P:${this.#world.entities[0].position}, Ps:${this.#world.entities[0].screenPos}, Po:[${this.#world.entities[0].animate_xOffset},${this.#world.entities[0].animate_yOffset}], As:${this.#world.entities[0].animateSpeed}`)
     }
     
     keyUp(e){
         // this should be an array so we can track multiple keys at once
-        this.moveFn = null
+        switch(e.key){
+            case "ArrowRight":
+            case "ArrowLeft":
+            case "ArrowUp":
+            case "ArrowDown":
+                this.moveFn[e.key] = null;
+        }
     }
 
     keyDown(e){
+        //console.log(e)
         //if (e.repeat) return;
         let pos = this.#world.player?.position || [0,0]
-        this.moveFn = null
         switch(e.key){
             case 'h':
                 this.showWelcome()
@@ -264,11 +278,7 @@ export class Game{
                     this.#world.map.scrollMap(this.ctx,1,0)
                 }
                 else{
-                    this.moveFn = ()=>this.requestMove('right')
-                    // if(this.#world.player.move(this.ctx, this.#world, 'right') && this.#world.isCenter(pos)[0]){
-                    //     this.#world.map.scrollMap(this.ctx,1,0)
-                    // }
-                    this.world.checkEvent(this.ctx)
+                    this.moveFn[e.key] = ()=>this.requestMove('right')
                 }
                 break;
             case "ArrowLeft":
@@ -276,12 +286,7 @@ export class Game{
                     this.#world.map.scrollMap(this.ctx,-1,0)
                 }
                 else{
-                    // if(this.#world.player.move(this.ctx, this.#world,'left') && 
-                    //     this.#world.isCenter(pos)[0]){
-                    //     this.#world.map.scrollMap(this.ctx,-1,0)
-                    // }
-                    this.moveFn = ()=>this.requestMove('left')                     
-                    this.world.checkEvent(this.ctx)
+                    this.moveFn[e.key] = ()=>this.requestMove('left')
                 } 
                 break;
             case "ArrowDown":
@@ -289,12 +294,7 @@ export class Game{
                     this.#world.map.scrollMap(this.ctx,0,1)
                 }
                 else{
-                    // if(this.#world.player.move(this.ctx, this.#world, 'down' ) && 
-                    //     this.#world.isCenter(pos)[1]){
-                    //     this.#world.map.scrollMap(this.ctx,0,1)
-                    // }
-                    this.moveFn = ()=>this.requestMove('down')
-                    this.world.checkEvent(this.ctx)
+                    this.moveFn[e.key] = ()=>this.requestMove('down')
                 }
                 break;
             case "ArrowUp":
@@ -302,12 +302,7 @@ export class Game{
                     this.#world.map.scrollMap(this.ctx,0,-1)
                 }
                 else{
-                    // if(this.#world.player.move(this.ctx, this.#world,'up') && 
-                    //     this.#world.isCenter(pos)[1]){
-                    //     this.#world.map.scrollMap(this.ctx,0,-1)
-                    // }
-                    this.moveFn = ()=>this.requestMove('up'); 
-                    this.world.checkEvent(this.ctx)
+                    this.moveFn[e.key] = ()=>this.requestMove('up')
                 }
                 break;
         }

@@ -36,6 +36,7 @@ export class World{
     }
 
     checkEvent(ctx){
+        if(!this.#map) return;
         let e = this.#map.checkEvents(this.player.position[0],this.player.position[1])
         if( e ){
             e(ctx, this)
