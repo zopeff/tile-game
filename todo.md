@@ -144,3 +144,10 @@ Questing System with FSMs
         retrieve rare item
         return to npc
         win
+
+
+--------
+progressive map reveal/fog of war?
+    every where?
+    just caves?
+houses where the roof is removed rather than load a new map?
