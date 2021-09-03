@@ -21,6 +21,8 @@ export class NPCStateHandler extends StateHandler{
             console.log(this.parent.name,"Cannot", to)
             return false;
         }
+        window.game.speech.removeMessage(this.curr_message)
+
         if('speak' === to && this.parent.y <= 3){
             return false;
         }        
@@ -63,7 +65,6 @@ export class NPCStateHandler extends StateHandler{
         }
 
         if( elapsed > this.state.time){
-            window.game.speech.removeMessage(this.curr_message)
             if( 'idle' === this.state.id ){
                 //move in a random direction
                 const dirArr = ['up','down','left','right'];
