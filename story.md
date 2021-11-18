@@ -31,6 +31,17 @@ Find caveman
 ### _Lords and Ladies_
 ? who are you?
 
+## characters
+### YOU
+?
+
+### Ron
+Ron is an outsider, kind of strange. People in town dont like him and are unconfortable around him.
+Ron has mental disorder? Town shuns him. Town blames him for things that go wrong. Ron left town and moved into the woods. He just wants to be left alone.
+
+## prelude
+Something stolen from town. People blame Ron? Turns out item is used in magic ritual that cult is doing to open portal to elf land. You figure this out, discover cult actually did it bu not sure why yet. Ron is now your friend and can make things for you. Turns out ron is a really good blacksmith and can make weapons. If you bring ron supplies and help rebuild his forge that the town destroyed. (Ron had an unusal forge and the town thought it was magic)
+
 ## act 1
 - someone in town is secretly messing with magic in the hills
     - feels like a cult 
