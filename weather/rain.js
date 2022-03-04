@@ -92,12 +92,12 @@ export class Rain{
     draw(ctx, time){
         ctx.save();
         let dt = time - this.lastTime;
-        this.lastTime = time;
         if (dt > 100) { dt = FIXED_STEP; }
     
         while (dt >= FIXED_STEP) {
             this.updateDrops(ctx, FIXED_STEP);
             dt -= FIXED_STEP;
+            this.lastTime = time;
         }
 
         ctx.fillStyle = "rgba(0, 0, 0, 0.3)";
